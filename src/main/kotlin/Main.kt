@@ -49,17 +49,17 @@ class Main : Application() {
     }
 
     fun update(){
-        val liste_adresses_StackTops= Array(getNbJoueurs()){""}
+        val listeAdressesStackTops= Array(getNbJoueurs()){""}
         for (i in 0 until getNbJoueurs()){
-            liste_adresses_StackTops[i]="Pickominos/Pickomino_${modele!!.listeJoueurs[i].valueStackTop}.png"
+            listeAdressesStackTops[i]="Pickominos/Pickomino_${modele!!.listeJoueurs[i].valueStackTop}.png"
         }
-        vueJeu!!.updateStackTops(liste_adresses_StackTops)
+        vueJeu!!.updateStackTops(listeAdressesStackTops)
         val listePickominoAccessibles=modele!!.listePickominoAccessible()
-        val liste_adresses_Pickkominos= Array(listePickominoAccessibles.size){""}
+        val listeAdressesPickominos= Array(listePickominoAccessibles.size){""}
         for (i in listePickominoAccessibles.indices){
-            liste_adresses_Pickkominos[i]="Pickominos/Pickomino_${listePickominoAccessibles[i]}.png"
+            listeAdressesPickominos[i]="Pickominos/Pickomino_${listePickominoAccessibles[i]}.png"
         }
-        vueJeu!!.updatePickominos(liste_adresses_Pickkominos)
+        vueJeu!!.updatePickominos(listeAdressesPickominos)
     }
 }
 fun main() {

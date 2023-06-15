@@ -1,11 +1,16 @@
 package controleur.jeu
 
+import Main
+import iut.info1.pickomino.data.DICE
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import vue.DiceButton
 
-class ControleurBoutonLancer() : EventHandler<ActionEvent> {
+class ControleurBoutonLancer(private val appli : Main) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
-        TODO("Not yet implemented")
+        val listeDesLances = appli.modele!!.lancerDes()
+        appli.modele!!.obtenirEtatJeu()
+        appli.vueJeu!!.updateDesLances(listeDesLances)
     }
 }

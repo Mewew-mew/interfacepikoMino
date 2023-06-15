@@ -12,19 +12,18 @@ import kotlin.math.floor
 
 class JeuPickomino(nbJoueurs : Int) {
     private val connect = Connector.factory("172.26.82.76", "8080", true)
-    private val id : Int = 4218
-    private val key : Int = 100
+    private val id : Int
+    private val key : Int
     val listeJoueurs = Array(nbJoueurs){i -> Joueur(i)}
     val tourDuJoueur = 0
 
     init {
-        /*
         val identification = connect.newGame(nbJoueurs)
         id = identification.first
         key = identification.second
-        */
 
         // Debug
+        /*
         val sommets=sommetsPilesPickominoJoueurs()
         for (i in 0 until 4)
             try {
@@ -33,6 +32,7 @@ class JeuPickomino(nbJoueurs : Int) {
             catch (e: ArrayIndexOutOfBoundsException) {
                 break
             }
+        */
     }
 
     fun lancerDes(): List<DICE> {
@@ -76,7 +76,7 @@ class JeuPickomino(nbJoueurs : Int) {
     fun obtenirScoreFinal(): List<Int> {
         return connect.finalScore(id, key)
     }
-    private fun obtenirEtatJeu(): Game {
+    fun obtenirEtatJeu(): Game {
         return connect.gameState(id, key)
     }
 

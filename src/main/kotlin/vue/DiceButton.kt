@@ -7,7 +7,11 @@ import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 
-class DiceButton(url : String, val type: DICE) : Button("", ImageView(Image(url, 75.0, 75.5, true, false))) {
+class DiceButton(
+    url: String,
+    val type: DICE,
+    crossed: Boolean = false
+) : Button("", ImageView(Image(if (crossed) "Crossed$url" else url, 75.0, 75.5, true, false))) {
 
     var isSelected = false
 

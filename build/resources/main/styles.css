@@ -58,7 +58,6 @@
     -fx-translate-y: 1px;
 }
 
-
 .bordered-hbox {
     -fx-border-color: black;
     -fx-border-width: 2px;

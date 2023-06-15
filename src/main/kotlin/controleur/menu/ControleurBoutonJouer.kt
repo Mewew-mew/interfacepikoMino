@@ -31,7 +31,10 @@ class ControleurBoutonJouer(private val appli: Main, private val stage: Stage) :
         appli.modele = JeuPickomino(nbJoueurs)
         stage.isResizable = true
 
-        appli.update()
+        appli.update() // Debug
+
+        appli.vueJeu!!.fixeControleurBoutonLancer(appli)
+
         stage.close()
         stage.show()
     }

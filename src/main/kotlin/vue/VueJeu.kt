@@ -1,9 +1,13 @@
 package vue
 
+import Main
+import controleur.jeu.ControleurBoutonLancer
 import controleur.jeu.ControleurDes
 import iut.info1.pickomino.data.DICE
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleListProperty
+import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.geometry.Insets
 import javafx.geometry.Orientation.HORIZONTAL
@@ -34,15 +38,12 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
     val listeLabelNbPickomino = Array(nbJoueurs){Label("\tNombre\nde Pickomino : 0")}
     val listeImgPickoSommetPile = Array(nbJoueurs){ImageView(Image("Pickominos/Pickomino_0.png"))}
     val listeBoutonPickoAccess = mutableListOf<PickominoButton>()
-    val listeDesLances = mutableListOf<DiceButton>()
+    var listeDesLances = mutableListOf<DiceButton>()
     val listeDesGardes = mutableListOf<DiceButton>()
 
     init {
         //------------ Debug
-        for (i in 21..36) {
-            listeBoutonPickoAccess.add(PickominoButton(i))
-        }
-
+        /*
         val listeDes = listOf(
             DiceButton("Dices/Dice_1.png", DICE.d1),
             DiceButton("Dices/Dice_1.png", DICE.d1),
@@ -51,17 +52,36 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
             DiceButton("Dices/Dice_3.png", DICE.d3),
             DiceButton("Dices/Dice_4.png", DICE.d4),
             DiceButton("Dices/Dice_5.png", DICE.d5),
-            DiceButton("Dices/Dice_worm.png", DICE.worm)
+            DiceButton("Dices/Dice_6.png", DICE.worm)
         )
 
         for (boutonDes in listeDes) {
             listeDesLances.add(boutonDes)
             desLances.children.add(VBox(boutonDes).also{it.alignment = Pos.CENTER})
         }
+        */
         // -----------------------
 
+        boutonLancer.style = "-fx-background-color: #348ded;" +
+        "-fx-background-radius: 30px;" +
+        "-fx-border-radius:30px;" +
+        "-fx-border-width: 2px;" +
+        "-fx-border-color: #000000;" +
+        "-fx-display: inline-block;" +
+        "-fx-cursor: hand;" +
+        "-fx-text-fill: #FFFFFF;" +
+        "-fx-font-size:17px;" +
+        "-fx-padding:22px 39px;" +
+        "-fx-text-decoration: none;"
+        boutonLancer.setOnMouseEntered {
+            boutonLancer.style += "-fx-background-color:#266fbd;"
+        }
 
+        boutonLancer.setOnMouseExited {
+            boutonLancer.style = boutonLancer.style.removeSuffix("-fx-background-color:#266fbd;")
+        }
 
+        boutonValider.isDisable = true
 
         cadreCentre.top = VBox(cadrePickominos).also{
             it.alignment = Pos.CENTER
@@ -117,6 +137,21 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
     fun fixeControleurDes() {
         for (des in listeDesLances)
             des.onAction = ControleurDes(this)
+    }
+
+    fun fixeControleurBoutonLancer(appli : Main) {
+        boutonLancer.onAction = ControleurBoutonLancer(appli)
+    }
+
+    fun updateDesLances(listeDes : List<DICE>) {
+        listeDesLances.clear()
+        desLances.children.clear()
+        for (des in listeDes) {
+            val boutonDes = DiceButton("Dices/Dice_${des.ordinal+1}.png", des)
+            listeDesLances.add(boutonDes)
+            fixeControleurDes()
+            desLances.children.add(VBox(boutonDes).also{it.alignment = Pos.CENTER})
+        }
     }
 
     fun updateStackTops(newImages:Array<String>){
