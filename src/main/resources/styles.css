@@ -1,0 +1,45 @@
+.label-titre {
+    -fx-text-fill: #FFCC33;
+    -fx-font-style: italic;
+}
+
+.texte-nbr-joueurs {
+    -fx-font-size: 25px;
+    -fx-text-fill: #FFFFFF;
+    -fx-stroke: #000000
+}
+
+.bouton-moins {
+    -fx-background-color: #f53939;
+    -fx-cursor: hand;
+    -fx-text-fill: #000000;
+    -fx-font-size: 24px;
+    -fx-text-decoration: none;
+}
+
+.bouton-moins:hover {
+    -fx-background-color: #ff0000;
+}
+
+.bouton-plus {
+    -fx-background-color: #2e82ff;
+    -fx-cursor: hand;
+    -fx-text-fill: #000000;
+    -fx-font-family: Arial;
+    -fx-font-size: 24px;
+    -fx-text-decoration: none;
+}
+
+.bouton-plus:hover {
+    -fx-background-color: #4a6eff;
+}
+
+.bouton-moins:pressed, .bouton-plus:pressed {
+    -fx-translate-y: 1px;
+}
+
+
+.bordered-hbox {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}

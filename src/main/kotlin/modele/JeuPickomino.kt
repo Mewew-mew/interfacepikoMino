@@ -1,0 +1,90 @@
+package modele
+
+import iut.info1.pickomino.Connector
+import iut.info1.pickomino.data.DICE
+import iut.info1.pickomino.data.DICE.*
+import iut.info1.pickomino.data.Game
+import iut.info1.pickomino.data.Pickomino
+import javafx.beans.binding.Bindings
+import javafx.beans.property.SimpleListProperty
+import javafx.collections.FXCollections
+import kotlin.math.floor
+
+class JeuPickomino(nbJoueurs : Int) {
+    private val connect = Connector.factory("172.26.82.76", "8080", true)
+    private val id : Int = 4218
+    private val key : Int = 100
+    private val listeJoueurs = Array(nbJoueurs){i -> Joueur(i)}
+    private val tourDuJoueur = 0
+
+    init {
+        /*
+        val identification = connect.newGame(nbJoueurs)
+        id = identification.first
+        key = identification.second
+        */
+    }
+
+    fun lancerDes(): List<DICE> {
+        return connect.rollDices(id, key)
+    }
+
+    fun choisirDes(dices: List<DICE>): List<DICE> {
+        return connect.choiceDices(id, key, dices)
+    }
+
+    fun garderDes(dice: DICE): Boolean {
+        if (!connect.keepDices(id, key, dice))
+            return false
+        return true
+    }
+
+    fun prendrePickomino(pickomino: Int): Boolean {
+        if (!connect.takePickomino(id, key, pickomino))
+            return false
+        val stackTops = sommetsPilesPickominoJoueurs()
+        for (i in listeJoueurs.indices)
+            listeJoueurs[i].valueStackTop = stackTops[i]
+        return true
+    }
+
+    fun sommeDes(dices : List<DICE>) : Int {
+        var somme = 0
+        for (dice in dices)
+            somme += when (dice) {
+                d1 -> 1
+                d2 -> 2
+                d3 -> 3
+                d4 -> 4
+                else -> 5
+            }
+        return somme
+    }
+
+    fun obtenirScoreFinal(): List<Int> {
+        return connect.finalScore(id, key)
+    }
+    private fun obtenirEtatJeu(): Game {
+        return connect.gameState(id, key)
+    }
+
+    fun listeDesLance() : List<DICE> {
+        return obtenirEtatJeu().current.rolls
+    }
+
+    fun listeDesGardes() : List<DICE> {
+        return obtenirEtatJeu().current.keptDices
+    }
+
+    fun joueurActuel() : Int {
+        return obtenirEtatJeu().current.player
+    }
+
+    fun listePickominoAccessible() : List<Int> {
+        return obtenirEtatJeu().accessiblePickos()
+    }
+
+    fun sommetsPilesPickominoJoueurs(): List<Int> {
+        return obtenirEtatJeu().pickosStackTops()
+    }
+}
