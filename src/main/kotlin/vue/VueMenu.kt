@@ -43,6 +43,7 @@ class VueMenu : VBox() {
         boutonPlus.styleClass.add("bouton-plus")
         boutonPlus.prefHeight = 50.0
         boutonPlus.prefWidth = 50.0
+        boutonJouer.styleClass.add("bouton-jouer")
 
         val choixJoueurs = HBox(boutonMoins, labelNbrJoueur, boutonPlus)
         choixJoueurs.spacing = 20.0

@@ -10,16 +10,17 @@ import vue.VueJeu
 import vue.VueMenu
 
 class Main : Application() {
-    private val vueMenu = VueMenu()
-    private var vueJeu : VueJeu? = null
-    private var modele : JeuPickomino? = null
-
+    val vueMenu = VueMenu()
+    var vueJeu : VueJeu? = null
+    var modele : JeuPickomino? = null
     init {
         vueMenu.fixeControleurBoutons()
+
     }
     override fun start(stage: Stage) {
         val sceneMenu = Scene(vueMenu)
         sceneMenu.stylesheets.add("styles.css")
+
 
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, stage)
 
@@ -43,19 +44,22 @@ class Main : Application() {
         */
     }
 
-    fun getVueJeu() : VueJeu? {
-        return vueJeu
-    }
-    fun setVueJeu(nouvelleVueJeu: VueJeu) {
-        vueJeu = nouvelleVueJeu
-    }
-
-    fun getNbJoueurs() : Int {
+    fun getNbJoueurs(): Int {
         return vueMenu.getNbJoueurs()
     }
 
-    fun nouvellePartie(nbJoueurs : Int) {
-        modele = JeuPickomino(nbJoueurs)
+    fun update(){
+        val liste_adresses_StackTops= Array(getNbJoueurs()){""}
+        for (i in 0 until getNbJoueurs()){
+            liste_adresses_StackTops[i]="Pickominos/Pickomino_${modele!!.listeJoueurs[i].valueStackTop}.png"
+        }
+        vueJeu!!.updateStackTops(liste_adresses_StackTops)
+        val listePickominoAccessibles=modele!!.listePickominoAccessible()
+        val liste_adresses_Pickkominos= Array(listePickominoAccessibles.size){""}
+        for (i in listePickominoAccessibles.indices){
+            liste_adresses_Pickkominos[i]="Pickominos/Pickomino_${listePickominoAccessibles[i]}.png"
+        }
+        vueJeu!!.updatePickominos(liste_adresses_Pickkominos)
     }
 }
 fun main() {

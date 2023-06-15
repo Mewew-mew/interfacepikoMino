@@ -34,7 +34,27 @@
     -fx-background-color: #4a6eff;
 }
 
-.bouton-moins:pressed, .bouton-plus:pressed {
+.bouton-jouer {
+    -fx-background-color: #f0c911;
+    -fx-border-radius: 30px;
+    -fx-background-radius: 30px;
+    -fx-border-width: 2px;
+    -fx-border-color: #e65f44;
+    -fx-display: inline-block;
+    -fx-cursor: hand;
+    -fx-text-fill: #c92200;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-padding: 18px 60px;
+    -fx-text-decoration: none;
+}
+
+.bouton-jouer:hover {
+    -fx-background-color: #f2ab1e;
+}
+
+.bouton-moins:pressed, .bouton-plus:pressed, .bouton-jouer:pressed {
     -fx-translate-y: 1px;
 }
 

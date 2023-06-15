@@ -14,8 +14,8 @@ class JeuPickomino(nbJoueurs : Int) {
     private val connect = Connector.factory("172.26.82.76", "8080", true)
     private val id : Int = 4218
     private val key : Int = 100
-    private val listeJoueurs = Array(nbJoueurs){i -> Joueur(i)}
-    private val tourDuJoueur = 0
+    val listeJoueurs = Array(nbJoueurs){i -> Joueur(i)}
+    val tourDuJoueur = 0
 
     init {
         /*
@@ -23,6 +23,16 @@ class JeuPickomino(nbJoueurs : Int) {
         id = identification.first
         key = identification.second
         */
+
+        // Debug
+        val sommets=sommetsPilesPickominoJoueurs()
+        for (i in 0 until 4)
+            try {
+                listeJoueurs[i].valueStackTop=sommets[i]
+            }
+            catch (e: ArrayIndexOutOfBoundsException) {
+                break
+            }
     }
 
     fun lancerDes(): List<DICE> {
@@ -43,8 +53,10 @@ class JeuPickomino(nbJoueurs : Int) {
         if (!connect.takePickomino(id, key, pickomino))
             return false
         val stackTops = sommetsPilesPickominoJoueurs()
-        for (i in listeJoueurs.indices)
+        for (i in listeJoueurs.indices) {
             listeJoueurs[i].valueStackTop = stackTops[i]
+            listeJoueurs[i].nombrePickomino++
+        }
         return true
     }
 
@@ -84,7 +96,7 @@ class JeuPickomino(nbJoueurs : Int) {
         return obtenirEtatJeu().accessiblePickos()
     }
 
-    fun sommetsPilesPickominoJoueurs(): List<Int> {
+    private fun sommetsPilesPickominoJoueurs(): List<Int> {
         return obtenirEtatJeu().pickosStackTops()
     }
 }

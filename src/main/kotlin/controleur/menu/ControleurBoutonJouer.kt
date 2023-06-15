@@ -17,17 +17,21 @@ class ControleurBoutonJouer(private val appli: Main, private val stage: Stage) :
         stage.minWidth = 914.0
         stage.minHeight = 734.0
         val nbJoueurs = appli.getNbJoueurs()
-        appli.setVueJeu(VueJeu(nbJoueurs))
+        appli.vueJeu = VueJeu(nbJoueurs)
+
+        appli.vueJeu!!.fixeControleurDes() // Debug
 
         val spacingBinding = Bindings.createDoubleBinding(
             {(stage.width-201*nbJoueurs) / (nbJoueurs-1)},
             stage.widthProperty()
         )
-        appli.getVueJeu()!!.cadreJoueurs.spacingProperty().bind(spacingBinding)
+        appli.vueJeu!!.cadreJoueurs.spacingProperty().bind(spacingBinding)
 
-        stage.scene = Scene(appli.getVueJeu())
-        appli.nouvellePartie(nbJoueurs)
+        stage.scene = Scene(appli.vueJeu)
+        appli.modele = JeuPickomino(nbJoueurs)
         stage.isResizable = true
+
+        appli.update()
         stage.close()
         stage.show()
     }
