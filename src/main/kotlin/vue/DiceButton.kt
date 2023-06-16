@@ -1,6 +1,5 @@
 package vue
 
-import controleur.jeu.ControleurDes
 import iut.info1.pickomino.data.DICE
 import javafx.geometry.Insets
 import javafx.scene.control.Button
@@ -9,15 +8,14 @@ import javafx.scene.image.ImageView
 
 
 class DiceButton(
-    url: String,
     val type: DICE,
-    crossed: Boolean
+    var crossed: Boolean = false
 ) : Button() {
 
     var isSelected = false
 
     init {
-        val imageView = ImageView(Image(if (crossed) "Dices/Crossed$url" else "Dices/$url"))
+        val imageView = ImageView(Image(if (crossed) "Dices/CrossedDice_${type.name}.png" else "Dices/Dice_${type.name}.png"))
         imageView.fitHeight = 75.0
         imageView.fitWidth = 75.0
 

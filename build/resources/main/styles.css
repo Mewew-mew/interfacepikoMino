@@ -87,8 +87,24 @@
     -fx-background-color: #588401;
 }
 
+.bouton-joueur-suivant {
+    -fx-background-color: goldenrod;
+    -fx-background-radius: 30px;
+    -fx-border-radius:30px;
+    -fx-border-width: 2px;
+    -fx-border-color: #000000;
+    -fx-cursor: hand;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size:17px;
+    -fx-padding:22px 39px;
+    -fx-text-decoration: none;
+}
 
-.bouton {
+.bouton-joueur-suivant:hover {
+    -fx-background-color: darkgoldenrod;
+}
+
+.bouton:pressed {
     -fx-translate-y: 1px;
 }
 
