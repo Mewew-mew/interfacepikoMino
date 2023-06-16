@@ -40,7 +40,6 @@
     -fx-background-radius: 30px;
     -fx-border-width: 2px;
     -fx-border-color: #e65f44;
-    -fx-display: inline-block;
     -fx-cursor: hand;
     -fx-text-fill: #c92200;
     -fx-font-size: 15px;
@@ -54,7 +53,42 @@
     -fx-background-color: #f2ab1e;
 }
 
-.bouton-moins:pressed, .bouton-plus:pressed, .bouton-jouer:pressed {
+.bouton-lancer {
+    -fx-background-color: #348ded;
+    -fx-background-radius: 30px;
+    -fx-border-radius:30px;
+    -fx-border-width: 2px;
+    -fx-border-color: #000000;
+    -fx-cursor: hand;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size:17px;
+    -fx-padding:22px 39px;
+    -fx-text-decoration: none;
+}
+
+.bouton-lancer:hover {
+    -fx-background-color:#266fbd;
+}
+
+.bouton-valider {
+        -fx-background-color: limegreen;
+        -fx-background-radius: 30px;
+        -fx-border-radius:30px;
+        -fx-border-width: 2px;
+        -fx-border-color: #000000;
+        -fx-cursor: hand;
+        -fx-text-fill: #FFFFFF;
+        -fx-font-size:17px;
+        -fx-padding:22px 39px;
+        -fx-text-decoration: none;
+}
+
+.bouton-valider:hover {
+    -fx-background-color: #588401;
+}
+
+
+.bouton-moins:pressed, .bouton-plus:pressed, .bouton-jouer:pressed, .bouton-lancer:pressed, .bouton-valider:pressed {
     -fx-translate-y: 1px;
 }
 

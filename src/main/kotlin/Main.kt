@@ -54,12 +54,7 @@ class Main : Application() {
             listeAdressesStackTops[i]="Pickominos/Pickomino_${modele!!.listeJoueurs[i].valueStackTop}.png"
         }
         vueJeu!!.updateStackTops(listeAdressesStackTops)
-        val listePickominoAccessibles=modele!!.listePickominoAccessible()
-        val listeAdressesPickominos= Array(listePickominoAccessibles.size){""}
-        for (i in listePickominoAccessibles.indices){
-            listeAdressesPickominos[i]="Pickominos/Pickomino_${listePickominoAccessibles[i]}.png"
-        }
-        vueJeu!!.updatePickominos(listeAdressesPickominos)
+        vueJeu!!.updatePickominos(modele!!.listePickominoAccessible())
     }
 }
 fun main() {

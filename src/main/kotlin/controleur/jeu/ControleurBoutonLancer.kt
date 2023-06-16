@@ -12,5 +12,6 @@ class ControleurBoutonLancer(private val appli : Main) : EventHandler<ActionEven
         val listeDesLances = appli.modele!!.lancerDes()
         appli.modele!!.obtenirEtatJeu()
         appli.vueJeu!!.updateDesLances(listeDesLances)
+        appli.vueJeu!!.boutonLancer.isDisable = true
     }
 }

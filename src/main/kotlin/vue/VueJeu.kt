@@ -2,17 +2,12 @@ package vue
 
 import Main
 import controleur.jeu.ControleurBoutonLancer
+import controleur.jeu.ControleurBoutonValider
 import controleur.jeu.ControleurDes
 import iut.info1.pickomino.data.DICE
-import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleListProperty
-import javafx.collections.FXCollections
-import javafx.collections.ListChangeListener
 import javafx.geometry.Insets
 import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Pos
-import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.image.Image
@@ -23,10 +18,10 @@ import javafx.scene.paint.Color
 class VueJeu(nbJoueurs : Int) : BorderPane(){
 
     val cadrePickominos = FlowPane(HORIZONTAL)
-    val boutonLancer = Button("Lancer")
+    val boutonLancer = Button("Lancer").also{it.styleClass.add("bouton-lancer")}
     val desGardes = HBox()
     val desLances = HBox()
-    val boutonValider = Button("Valider")
+    val boutonValider = Button("Valider").also{it.styleClass.add("bouton-valider")}
     val cadreDes = HBox(desGardes, desLances)
     val cadreBoutons = HBox(boutonLancer, boutonValider)
     val cadreCentre = BorderPane()
@@ -61,25 +56,6 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
         }
         */
         // -----------------------
-
-        boutonLancer.style = "-fx-background-color: #348ded;" +
-        "-fx-background-radius: 30px;" +
-        "-fx-border-radius:30px;" +
-        "-fx-border-width: 2px;" +
-        "-fx-border-color: #000000;" +
-        "-fx-display: inline-block;" +
-        "-fx-cursor: hand;" +
-        "-fx-text-fill: #FFFFFF;" +
-        "-fx-font-size:17px;" +
-        "-fx-padding:22px 39px;" +
-        "-fx-text-decoration: none;"
-        boutonLancer.setOnMouseEntered {
-            boutonLancer.style += "-fx-background-color:#266fbd;"
-        }
-
-        boutonLancer.setOnMouseExited {
-            boutonLancer.style = boutonLancer.style.removeSuffix("-fx-background-color:#266fbd;")
-        }
 
         boutonValider.isDisable = true
 
@@ -135,23 +111,59 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
     }
 
     fun fixeControleurDes() {
-        for (des in listeDesLances)
+        for (des in listeDesLances) {
             des.onAction = ControleurDes(this)
+            des.setOnMouseEntered {
+                val targetType = des.type
+                listeDesLances.forEach { otherButton ->
+                    if (otherButton.type == targetType) {
+                        otherButton.graphic.scaleX = 1.1
+                        otherButton.graphic.scaleY = 1.1
+                    }
+                }
+            }
+
+            des.setOnMouseExited {
+                val targetType = des.type
+                listeDesLances.forEach { otherButton ->
+                    if (otherButton.type == targetType) {
+                        otherButton.graphic.scaleX = 1.0
+                        otherButton.graphic.scaleY = 1.0
+                    }
+                }
+            }
+        }
     }
 
-    fun fixeControleurBoutonLancer(appli : Main) {
+    fun fixeControleurBoutons(appli : Main) {
         boutonLancer.onAction = ControleurBoutonLancer(appli)
+        boutonValider.onAction = ControleurBoutonValider(appli)
     }
 
     fun updateDesLances(listeDes : List<DICE>) {
         listeDesLances.clear()
         desLances.children.clear()
         for (des in listeDes) {
-            val boutonDes = DiceButton("Dices/Dice_${des.ordinal+1}.png", des)
+            val boutonDes = DiceButton("Dice_${des.ordinal+1}.png", des, des in listeDesGardes.map{it.type})
             listeDesLances.add(boutonDes)
             fixeControleurDes()
             desLances.children.add(VBox(boutonDes).also{it.alignment = Pos.CENTER})
         }
+    }
+
+    fun updateAffichageDes() {
+        desLances.children.clear()
+        desGardes.children.clear()
+        for (boutonDes in listeDesLances) {
+            desLances.children.add(VBox(boutonDes).also{it.alignment = Pos.CENTER})
+        }
+        for (boutonDes in listeDesGardes) {
+            desGardes.children.add(VBox(boutonDes).also{it.alignment = Pos.CENTER})
+        }
+    }
+
+    fun clearDesLances() {
+        desLances.children.clear()
     }
 
     fun updateStackTops(newImages:Array<String>){
@@ -170,15 +182,14 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
         bottom = cadreJoueurs
     }
 
-    fun updatePickominos(newImages: Array<String>){
-        cadrePickominos.children.clear()
-        for (i in newImages.indices)
-            cadrePickominos.children.add(ImageView(Image(newImages[i], 76.0, 147.5, true, false)))
+    fun updatePickominos(listePickominoAccessible: List<Int>){
+        for (value in listePickominoAccessible)
+            listeBoutonPickoAccess.add(PickominoButton(value))
+        cadrePickominos.children.setAll(listeBoutonPickoAccess)
     }
 
 
     fun ajouterUnPickomino(joueur : Int) {
-
         val nombreActuel = listeLabelNbPickomino[joueur].text.takeLastWhile{it != ' '}.toInt()
         listeLabelNbPickomino[joueur].text = "\tNombre\nde Pickomino : ${nombreActuel+1}"
     }

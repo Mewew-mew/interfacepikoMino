@@ -7,15 +7,27 @@ import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 
+
 class DiceButton(
     url: String,
     val type: DICE,
     crossed: Boolean = false
-) : Button("", ImageView(Image(if (crossed) "Crossed$url" else url, 75.0, 75.5, true, false))) {
+) : Button() {
 
     var isSelected = false
 
     init {
+        val imageView = ImageView(Image(if (crossed) "Dices/Crossed$url" else "Dices/$url"))
+        imageView.fitHeight = 75.0
+        imageView.fitWidth = 75.0
+
+        graphic = imageView
+
+        if (crossed) {
+            isDisable = crossed
+            style = "-fx-opacity: 1.0;"
+        }
+
         padding = Insets(5.0)
         background = null
         border = null
