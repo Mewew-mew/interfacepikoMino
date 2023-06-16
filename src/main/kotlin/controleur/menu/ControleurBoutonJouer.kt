@@ -16,10 +16,6 @@ class ControleurBoutonJouer(
     private val stage: Stage
 ) : EventHandler<ActionEvent> {
     override fun handle(event: ActionEvent) {
-        stage.width = 1600.0
-        stage.height = 900.0
-        stage.minWidth = 914.0
-        stage.minHeight = 734.0
         val nbJoueurs = vueMenu.getNbJoueurs()
 
         modele.init(nbJoueurs)
@@ -42,6 +38,10 @@ class ControleurBoutonJouer(
         vueJeu.updatePickominos(modele.listePickominoAccessible())
 
         stage.close()
+        stage.width = 1600.0
+        stage.height = 900.0
+        stage.minWidth = 914.0
+        stage.minHeight = 734.0
         stage.show()
     }
 }

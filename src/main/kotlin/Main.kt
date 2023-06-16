@@ -1,6 +1,7 @@
 import controleur.menu.ControleurBoutonJouer
 import javafx.application.Application
 import javafx.scene.Scene
+import javafx.scene.image.Image
 import javafx.stage.Stage
 import modele.JeuPickomino
 import vue.VueJeu
@@ -19,6 +20,7 @@ class Main : Application() {
 
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(vueJeu, vueMenu, modele, stage)
 
+        stage.icons.add(Image("icon.png"))
         stage.width = 670.0
         stage.height = 670.0
         stage.isResizable = false
