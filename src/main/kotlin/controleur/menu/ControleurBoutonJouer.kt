@@ -20,7 +20,8 @@ class ControleurBoutonJouer(private val appli: Main, private val stage: Stage) :
 
         val vueJeu = VueJeu(nbJoueurs)
 
-        vueJeu.fixeControleurDes() // Debug
+        vueJeu.fixeControleurDes()
+
         val spacingBinding = Bindings.createDoubleBinding(
             {(stage.width-201*nbJoueurs) / (nbJoueurs-1)},
             stage.widthProperty()

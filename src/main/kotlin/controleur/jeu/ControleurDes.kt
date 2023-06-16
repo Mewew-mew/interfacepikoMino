@@ -11,7 +11,6 @@ import vue.VueJeu
 class ControleurDes(private val vueJeu: VueJeu) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
-        val de = event.source as DiceButton
         val typeDes = (event.source as DiceButton).type
         for (des in vueJeu.listeDesLances) {
             if (des.type == typeDes) {

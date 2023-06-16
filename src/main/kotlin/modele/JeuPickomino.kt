@@ -60,19 +60,6 @@ class JeuPickomino(nbJoueurs : Int) {
         return true
     }
 
-    fun sommeDes(dices : List<DICE>) : Int {
-        var somme = 0
-        for (dice in dices)
-            somme += when (dice) {
-                d1 -> 1
-                d2 -> 2
-                d3 -> 3
-                d4 -> 4
-                else -> 5
-            }
-        return somme
-    }
-
     fun obtenirScoreFinal(): List<Int> {
         return connect.finalScore(id, key)
     }

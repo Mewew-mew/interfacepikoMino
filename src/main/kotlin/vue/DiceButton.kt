@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView
 class DiceButton(
     url: String,
     val type: DICE,
-    crossed: Boolean = false
+    crossed: Boolean
 ) : Button() {
 
     var isSelected = false
@@ -24,7 +24,7 @@ class DiceButton(
         graphic = imageView
 
         if (crossed) {
-            isDisable = crossed
+            isDisable = true
             style = "-fx-opacity: 1.0;"
         }
 

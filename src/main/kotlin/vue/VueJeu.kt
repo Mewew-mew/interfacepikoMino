@@ -4,6 +4,7 @@ import Main
 import controleur.jeu.ControleurBoutonLancer
 import controleur.jeu.ControleurBoutonValider
 import controleur.jeu.ControleurDes
+import controleur.jeu.ControleurPickomino
 import iut.info1.pickomino.data.DICE
 import javafx.geometry.Insets
 import javafx.geometry.Orientation.HORIZONTAL
@@ -18,10 +19,11 @@ import javafx.scene.paint.Color
 class VueJeu(nbJoueurs : Int) : BorderPane(){
 
     val cadrePickominos = FlowPane(HORIZONTAL)
-    val boutonLancer = Button("Lancer").also{it.styleClass.add("bouton-lancer")}
+    val boutonLancer = Button("Lancer").also{it.styleClass.addAll("bouton","bouton-lancer")}
     val desGardes = HBox()
     val desLances = HBox()
-    val boutonValider = Button("Valider").also{it.styleClass.add("bouton-valider")}
+    val boutonValider = Button("Valider").also{it.styleClass.addAll("bouton","bouton-valider")}
+    val boutonJoueurSuivant = Button("Joueur suivant").also{it.styleClass.addAll("bouton","bouton-joueur-suivant")}
     val cadreDes = HBox(desGardes, desLances)
     val cadreBoutons = HBox(boutonLancer, boutonValider)
     val cadreCentre = BorderPane()
@@ -119,6 +121,7 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
                     if (otherButton.type == targetType) {
                         otherButton.graphic.scaleX = 1.1
                         otherButton.graphic.scaleY = 1.1
+                        otherButton.padding = Insets(10.0)
                     }
                 }
             }
@@ -129,6 +132,34 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
                     if (otherButton.type == targetType) {
                         otherButton.graphic.scaleX = 1.0
                         otherButton.graphic.scaleY = 1.0
+                        otherButton.padding = Insets(5.0)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fixeControleurPickominos() {
+        for (pickomino in listeBoutonPickoAccess) {
+            pickomino.onAction = ControleurPickomino(this)
+            pickomino.setOnMouseEntered {
+                val targetType = pickomino.value
+                listeBoutonPickoAccess.forEach { otherButton ->
+                    if (otherButton.value == targetType) {
+                        otherButton.graphic.scaleX = 1.1
+                        otherButton.graphic.scaleY = 1.1
+                        otherButton.padding = Insets(10.0)
+                    }
+                }
+            }
+
+            pickomino.setOnMouseExited {
+                val targetType = pickomino.value
+                listeBoutonPickoAccess.forEach { otherButton ->
+                    if (otherButton.value == targetType) {
+                        otherButton.graphic.scaleX = 1.0
+                        otherButton.graphic.scaleY = 1.0
+                        otherButton.padding = Insets(5.0)
                     }
                 }
             }
@@ -149,6 +180,12 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
             fixeControleurDes()
             desLances.children.add(VBox(boutonDes).also{it.alignment = Pos.CENTER})
         }
+    }
+
+    fun activerPickomino(value : Int) {
+        val pickomino = listeBoutonPickoAccess.lastOrNull{it.value <= value}
+        pickomino?.isDisable = false
+        pickomino?.style = ""
     }
 
     fun updateAffichageDes() {
@@ -186,6 +223,7 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
         for (value in listePickominoAccessible)
             listeBoutonPickoAccess.add(PickominoButton(value))
         cadrePickominos.children.setAll(listeBoutonPickoAccess)
+        fixeControleurPickominos()
     }
 
 
@@ -198,5 +236,18 @@ class VueJeu(nbJoueurs : Int) : BorderPane(){
         val nombreActuel = listeLabelNbPickomino[joueur].text.takeLastWhile{it != ' '}.toInt()
         if (nombreActuel != 0)
             listeLabelNbPickomino[joueur].text = "\tNombre\nde Pickomino : ${nombreActuel-1}"
+    }
+
+    fun sommeDes(dices : List<DiceButton>) : Int {
+        var somme = 0
+        for (dice in dices.map{it.type})
+            somme += when (dice) {
+                DICE.d1 -> 1
+                DICE.d2 -> 2
+                DICE.d3 -> 3
+                DICE.d4 -> 4
+                else -> 5
+            }
+        return somme
     }
 }

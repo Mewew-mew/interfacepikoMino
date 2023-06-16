@@ -16,9 +16,9 @@ import javafx.scene.text.Font
 
 class VueMenu : VBox() {
     val labelNbrJoueur = Label("Joueurs : 2")
-    val boutonMoins = Button("-")
-    val boutonPlus = Button("+")
-    val boutonJouer = Button("Jouer")
+    val boutonMoins = Button("-").also{it.styleClass.addAll("bouton","bouton-moins")}
+    val boutonPlus = Button("+").also{it.styleClass.addAll("bouton","bouton-plus")}
+    val boutonJouer = Button("Jouer").also{it.styleClass.addAll("bouton","bouton-jouer")}
 
     init {
         background = Background(BackgroundImage(
@@ -36,14 +36,11 @@ class VueMenu : VBox() {
 
         labelNbrJoueur.effect = DropShadow(10.0, Color.BLACK)
         labelNbrJoueur.styleClass.add("texte-nbr-joueurs")
-        boutonMoins.styleClass.add("bouton-moins")
         boutonMoins.prefHeight = 50.0
         boutonMoins.prefWidth = 50.0
         boutonMoins.isDisable = true
-        boutonPlus.styleClass.add("bouton-plus")
         boutonPlus.prefHeight = 50.0
         boutonPlus.prefWidth = 50.0
-        boutonJouer.styleClass.add("bouton-jouer")
 
         val choixJoueurs = HBox(boutonMoins, labelNbrJoueur, boutonPlus)
         choixJoueurs.spacing = 20.0

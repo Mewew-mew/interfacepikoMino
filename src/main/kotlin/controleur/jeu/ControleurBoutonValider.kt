@@ -26,6 +26,8 @@ class ControleurBoutonValider(private val appli : Main) : EventHandler<ActionEve
         appli.vueJeu!!.clearDesLances()
         if (appli.vueJeu!!.listeDesGardes.size != 8)
             appli.vueJeu!!.boutonLancer.isDisable = false
+
+        appli.vueJeu!!.activerPickomino(appli.vueJeu!!.sommeDes(appli.vueJeu!!.listeDesGardes))
         appli.modele!!.obtenirEtatJeu()
     }
 }

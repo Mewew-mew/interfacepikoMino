@@ -88,7 +88,7 @@
 }
 
 
-.bouton-moins:pressed, .bouton-plus:pressed, .bouton-jouer:pressed, .bouton-lancer:pressed, .bouton-valider:pressed {
+.bouton {
     -fx-translate-y: 1px;
 }
 
