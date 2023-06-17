@@ -34,7 +34,7 @@ class ControleurBoutonJouer(
             stage.isResizable = true
 
             val sceneJeu = Scene(vueJeu)
-            sceneJeu.stylesheets.add("styles.css")
+            sceneJeu.stylesheets.add("stylesheets/styles.css")
             stage.scene = sceneJeu
 
             vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())

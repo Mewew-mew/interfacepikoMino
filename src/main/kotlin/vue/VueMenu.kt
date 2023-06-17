@@ -21,7 +21,7 @@ class VueMenu : VBox() {
 
     init {
         background = Background(BackgroundImage(
-            Image("BackgroundMenu.jpg"),
+            Image("images/BackgroundMenu.jpg"),
             BackgroundRepeat.NO_REPEAT,
             BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,

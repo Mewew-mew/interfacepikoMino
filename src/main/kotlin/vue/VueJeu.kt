@@ -8,17 +8,20 @@ import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.*
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
 import javafx.scene.paint.Color
 import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
-
+    private val sonDes = MediaPlayer(Media(javaClass.getResource("/sounds/dice_rolling.mp3")!!.toString()))
+    val boutonVolume = SoundButton()
     private val cadreTourJoueur = HBox(
         Label("C'est au  tour du joueur : ").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")},
         Label("J1").also{it.style = "-fx-font-size: 55px;"; it.styleClass.addAll("itim","j1")}
     ).also{it.alignment = Pos.CENTER}
     private val labelInformation = Label("Vous pouvez lancer les dés !").also{it.style="-fx-font-size: 30px; -fx-underline: true;"; it.styleClass.add("handrawn")}
-    private val cadrePickominos = FlowPane(HORIZONTAL).also{it.style = "-fx-background-color: lightcoral;"}
+    private val cadrePickominos = FlowPane(HORIZONTAL)
     val boutonLancer = Button("Lancer").also{it.styleClass.addAll("bouton","bouton-lancer")}
     private val desGardes = HBox()
     private val desLances = HBox()
@@ -72,7 +75,7 @@ class VueJeu : BorderPane() {
         cadrePickominos.hgap = 15.0
         cadrePickominos.padding = Insets(20.0)
         cadrePickominos.maxWidth = 781.0
-        cadrePickominos.alignment = Pos.CENTER
+        cadrePickominos.alignment = Pos.TOP_CENTER
         cadrePickominos.children.addAll(listeBoutonPickoAccess)
 
 
@@ -97,7 +100,13 @@ class VueJeu : BorderPane() {
 
 
 
-        top = VBox(cadreTourJoueur, labelInformation).also{it.alignment = Pos.CENTER; setMargin(it, Insets(15.0))}
+        top = BorderPane(
+            VBox(cadreTourJoueur, labelInformation).also{it.alignment = Pos.CENTER; setMargin(it, Insets(-55.0, 15.0, 15.0, 15.0))},
+            boutonVolume,
+            null,
+            null,
+            null
+        )
         center = cadreCentre
         bottom = cadreJoueurs
 
@@ -232,5 +241,12 @@ class VueJeu : BorderPane() {
         val listePickomino = listeBoutonPickoAccess+listeBoutonPickoSommetPile
         val i = listePickomino.indexOfFirst{it.isSelected}
         return if (i != -1) listePickomino[i].value else 0
+    }
+
+    fun jouerSonDes() {
+        if (boutonVolume.isActive) {
+            sonDes.stop()
+            sonDes.play()
+        }
     }
 }

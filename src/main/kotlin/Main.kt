@@ -42,11 +42,11 @@ class Main : Application() {
     }
     override fun start(stage: Stage) {
         val sceneMenu = Scene(vueMenu)
-        sceneMenu.stylesheets.add("styles.css")
+        sceneMenu.stylesheets.add("stylesheets/styles.css")
 
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(vueJeu, vueMenu, modele, stage)
 
-        stage.icons.add(Image("icon.png"))
+        stage.icons.add(Image("images/icon.png"))
         stage.width = 670.0
         stage.height = 670.0
         stage.isResizable = false

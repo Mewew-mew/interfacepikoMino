@@ -9,7 +9,7 @@ class PickominoButton(val value : Int, isOnStackTop : Boolean = false) : Button(
 
     var isSelected = false
     init {
-        val imageView = ImageView(Image("Pickominos/Pickomino_$value.png", 263.0, 518.0, true, false))
+        val imageView = ImageView(Image("images/pickominos/Pickomino_$value.png", 263.0, 518.0, true, false))
         if (isOnStackTop) {
             imageView.fitWidth = 38.0
             imageView.fitHeight = 73.75

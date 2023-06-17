@@ -15,7 +15,7 @@ class DiceButton(
     var isSelected = false
 
     init {
-        val imageView = ImageView(Image(if (crossed) "Dices/CrossedDice_${type.name}.png" else "Dices/Dice_${type.name}.png"))
+        val imageView = ImageView(Image(if (crossed) "images/dices/CrossedDice_${type.name}.png" else "images/dices/Dice_${type.name}.png"))
         imageView.fitHeight = 75.0
         imageView.fitWidth = 75.0
 
