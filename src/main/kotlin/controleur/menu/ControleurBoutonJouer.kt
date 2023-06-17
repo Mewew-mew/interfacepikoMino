@@ -40,8 +40,8 @@ class ControleurBoutonJouer(
         stage.close()
         stage.width = 1600.0
         stage.height = 900.0
-        stage.minWidth = 914.0
-        stage.minHeight = 734.0
+        stage.minWidth = 920.0
+        stage.minHeight = 940.0
         stage.show()
     }
 }

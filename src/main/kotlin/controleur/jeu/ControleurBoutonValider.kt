@@ -35,21 +35,23 @@ class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: Je
             vueJeu.clearDesLances()
 
             val ilYaUnVers = vueJeu.listeDesGardes.any{it.type == DICE.worm}
-            val sommeDesGardes = modele.sommeDes(vueJeu.listeDesGardes)
+            val sommeDesGardes = modele.sommeDes(vueJeu.listeDesGardes.map{it.type})
+
+            vueJeu.updatePickominos(modele.listePickominoAccessible())
+            vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+            vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
 
             // Cas ou il y a 8 dés gardés et qu'aucun Pickomino n'a été activé ou alors qu'il n'y a pas de vers
             if (vueJeu.listeDesGardes.size == 8) {
                 vueJeu.boutonLancer.isDisable = true // On désactive à coup sur le boutonLancer
                 if (!ilYaUnVers || !vueJeu.activerPickomino(sommeDesGardes, joueurActuel)) {
                     vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
-                    vueJeu.updatePickominos(modele.listePickominoAccessible())
-                    vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
-                    vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
                 }
             } else {
                 vueJeu.boutonLancer.isDisable = false
-                if (ilYaUnVers)
+                if (ilYaUnVers) {
                     vueJeu.activerPickomino(sommeDesGardes, joueurActuel)
+                }
             }
 
         } else { // Sinon un pickomino est séléctionné
@@ -62,6 +64,7 @@ class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: Je
             vueJeu.boutonValider.isDisable = true
             vueJeu.boutonLancer.isDisable = false
             vueJeu.clearDesGardes()
+            vueJeu.updateCadreInformation(modele.joueurActuel())
         }
     }
 }

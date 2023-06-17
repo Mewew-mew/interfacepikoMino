@@ -11,5 +11,6 @@ class ControleurBoutonJoueurSuivant(private val vueJeu: VueJeu, private val mode
         vueJeu.boutonLancer.isDisable = false
         vueJeu.clearDesLances()
         vueJeu.clearDesGardes()
+        vueJeu.updateCadreInformation(modele.joueurActuel())
     }
 }

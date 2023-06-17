@@ -1,10 +1,29 @@
+@font-face {
+    font-family: 'Delicious Handrawn';
+    src: url('fonts/DeliciousHandrawn-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Itim';
+    src: url('fonts/Itim-Regular.ttf');
+}
+
+.handrawn {
+    -fx-font-family: 'Delicious Handrawn';
+}
+
+.itim {
+    -fx-font-family: 'Itim';
+}
+
 .label-titre {
+    -fx-font-size: 110px;
     -fx-text-fill: #FFCC33;
     -fx-font-style: italic;
 }
 
 .texte-nbr-joueurs {
-    -fx-font-size: 25px;
+    -fx-font-size: 35px;
     -fx-text-fill: #FFFFFF;
     -fx-stroke: #000000
 }
@@ -111,4 +130,20 @@
 .bordered-hbox {
     -fx-border-color: black;
     -fx-border-width: 2px;
+}
+
+.j1 {
+    -fx-text-fill: red;
+}
+
+.j2 {
+    -fx-text-fill: blue;
+}
+
+.j3 {
+    -fx-text-fill: green;
+}
+
+.j4 {
+    -fx-text-fill: gold;
 }

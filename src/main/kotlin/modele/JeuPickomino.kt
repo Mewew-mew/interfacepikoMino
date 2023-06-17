@@ -3,26 +3,36 @@ package modele
 import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.Game
-import vue.DiceButton
 
 class JeuPickomino {
-    private val connect = Connector.factory("172.26.82.76", "8080", true)
+    val debug = true
+    private val connect = Connector.factory("172.26.82.76", "8080", debug)
     private var id = 0
     private var key = 0
-    lateinit var listeJoueurs : Array<Joueur>
+    private lateinit var listeJoueurs : Array<Joueur>
 
     fun init(nbJoueurs : Int) {
         val identification = connect.newGame(nbJoueurs)
         id = identification.first
         key = identification.second
-        listeJoueurs = Array(nbJoueurs){i -> Joueur(i)}
+        listeJoueurs = Array(nbJoueurs){Joueur()}
     }
 
     fun lancerDes(): List<DICE> {
         val joueurActuel = joueurActuel()
-        val listeDesGardes = listeDesGardes()
         val listeDesLances = connect.rollDices(id, key)
-        if (listeDesLances.all{it in listeDesGardes}) {
+        if (listeDesGardes().isEmpty()) {
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
+                listeJoueurs[joueurActuel].nombrePickomino--
+            listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
+        }
+        return listeDesLances
+    }
+
+    fun choisirDes(listDices : List<DICE>): List<DICE> {
+        val joueurActuel = joueurActuel()
+        val listeDesLances = connect.choiceDices(id, key, listDices)
+        if (listeDesGardes().isEmpty()) {
             if (listeJoueurs[joueurActuel].nombrePickomino != 0)
                 listeJoueurs[joueurActuel].nombrePickomino--
             listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
@@ -31,23 +41,28 @@ class JeuPickomino {
     }
 
     fun garderDes(dice: DICE): Boolean {
-        return connect.keepDices(id, key, dice)
+        val joueurActuel = joueurActuel()
+        if (!connect.keepDices(id, key, dice))
+            return false
+        if (listeDesGardes().isEmpty()) {
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
+                listeJoueurs[joueurActuel].nombrePickomino--
+        }
+        return true
     }
 
     fun prendrePickomino(pickomino: Int): Boolean {
         val joueurActuel = joueurActuel()
         val stackTopsBefore = sommetsPilesPickominoJoueurs()
-
         if (!connect.takePickomino(id, key, pickomino))
             return false
         val stackTopsAfter = sommetsPilesPickominoJoueurs()
-        for (i in stackTopsBefore.indices) {
+        for (i in stackTopsBefore.indices)
             if (i != joueurActuel && stackTopsBefore[i] != stackTopsAfter[i]) {
                 if (listeJoueurs[i].nombrePickomino != 0)
                     listeJoueurs[i].nombrePickomino--
                 break
             }
-        }
 
         listeJoueurs[joueurActuel].valueStackTop = stackTopsAfter[joueurActuel]
         listeJoueurs[joueurActuel].nombrePickomino++
@@ -85,9 +100,9 @@ class JeuPickomino {
         return obtenirEtatJeu().pickosStackTops()
     }
 
-    fun sommeDes(dices : List<DiceButton>) : Int {
+    fun sommeDes(dices : List<DICE>) : Int {
         var somme = 0
-        for (dice in dices.map{it.type})
+        for (dice in dices)
             somme += when (dice) {
                 DICE.d1 -> 1
                 DICE.d2 -> 2

@@ -11,8 +11,13 @@ import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import modele.JeuPickomino
 
-class VueJeu : BorderPane(){
+class VueJeu : BorderPane() {
 
+    private val cadreTourJoueur = HBox(
+        Label("C'est au  tour du joueur : ").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")},
+        Label("J1").also{it.style = "-fx-font-size: 55px;"; it.styleClass.addAll("itim","j1")}
+    ).also{it.alignment = Pos.CENTER}
+    private val labelInformation = Label("Vous pouvez lancer les dés !").also{it.style="-fx-font-size: 30px; -fx-underline: true;"; it.styleClass.add("handrawn")}
     private val cadrePickominos = FlowPane(HORIZONTAL).also{it.style = "-fx-background-color: lightcoral;"}
     val boutonLancer = Button("Lancer").also{it.styleClass.addAll("bouton","bouton-lancer")}
     private val desGardes = HBox()
@@ -40,7 +45,6 @@ class VueJeu : BorderPane(){
         listeLabelJoueurs = Array(nbJoueurs){i -> Label("J${i+1}")}
         listeLabelNbPickomino = Array(nbJoueurs){Label("\tNombre\nde Pickomino : 0")}
         listeBoutonPickoSommetPile = Array(nbJoueurs){PickominoButton(0)}
-
         boutonValider.isDisable = true
 
         cadreCentre.top = VBox(cadrePickominos).also{
@@ -71,74 +75,70 @@ class VueJeu : BorderPane(){
         cadrePickominos.alignment = Pos.CENTER
         cadrePickominos.children.addAll(listeBoutonPickoAccess)
 
-        val listeCouleur = listOf("red", "blue", "green", "gold")
+
+
         for (i in 0 until nbJoueurs) {
             listeInfoJoueurs[i].children.addAll(listeLabelJoueurs[i], listeLabelNbPickomino[i])
             listeInfoJoueurs[i].alignment = Pos.CENTER
             listeInfoJoueurs[i].spacing = 10.0
-            listeLabelJoueurs[i].style = "-fx-font-size: 25px; -fx-text-fill: ${listeCouleur[i]};"
-            updateCadreJoueur(i)
+            listeLabelJoueurs[i].style = "-fx-font-size: 32px;"
+            listeLabelJoueurs[i].styleClass.addAll("itim","j${i+1}")
+            listeJoueurs[i].children.addAll(listeInfoJoueurs[i], listeBoutonPickoSommetPile[i])
+            listeJoueurs[i].alignment = Pos.CENTER
+            listeJoueurs[i].spacing = 10.0
+            listeJoueurs[i].padding = Insets(10.0)
+            listeJoueurs[i].border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
+            cadreJoueurs.children.add(listeJoueurs[i])
         }
 
         setMargin(cadreJoueurs, Insets(15.0))
 
         cadreJoueurs.alignment = Pos.CENTER
 
+
+
+        top = VBox(cadreTourJoueur, labelInformation).also{it.alignment = Pos.CENTER; setMargin(it, Insets(15.0))}
         center = cadreCentre
         bottom = cadreJoueurs
+
+        style = "-fx-background-color: #FAEBD7;"
     }
 
     private fun fixeControleurDes() {
-        for (des in listeDesLances) {
+        listeDesLances.forEach { des ->
             des.onAction = ControleurDes(this)
-
-            des.setOnMouseEntered {
-                val targetType = des.type
-                listeDesLances.forEach { otherButton ->
-                    if (otherButton.type == targetType) {
-                        otherButton.graphic.scaleX = 1.1
-                        otherButton.graphic.scaleY = 1.1
-                        otherButton.padding = Insets(10.0)
-                    }
-                }
-            }
-
-            des.setOnMouseExited {
-                val targetType = des.type
-                listeDesLances.forEach { otherButton ->
-                    if (otherButton.type == targetType) {
-                        otherButton.graphic.scaleX = 1.0
-                        otherButton.graphic.scaleY = 1.0
-                        otherButton.padding = Insets(5.0)
-                    }
-                }
-            }
+            setEffetAuSurvol(des, des.type, listeDesLances)
         }
     }
 
     private fun fixeControleurPickominos() {
-        for (pickomino in listeBoutonPickoAccess) {
+        listeBoutonPickoAccess.forEach { pickomino ->
             pickomino.onAction = ControleurPickomino(this)
-            pickomino.setOnMouseEntered {
-                val targetType = pickomino.value
-                listeBoutonPickoAccess.forEach { otherButton ->
-                    if (otherButton.value == targetType) {
-                        otherButton.graphic.scaleX = 1.1
-                        otherButton.graphic.scaleY = 1.1
-                        otherButton.padding = Insets(10.0)
-                    }
-                }
-            }
+            setEffetAuSurvol(pickomino, pickomino.value, listeBoutonPickoAccess)
+        }
+    }
 
-            pickomino.setOnMouseExited {
-                val targetType = pickomino.value
-                listeBoutonPickoAccess.forEach { otherButton ->
-                    if (otherButton.value == targetType) {
-                        otherButton.graphic.scaleX = 1.0
-                        otherButton.graphic.scaleY = 1.0
-                        otherButton.padding = Insets(5.0)
-                    }
-                }
+    private fun setEffetAuSurvol(button: Button, targetType: Any, buttonsList: List<Button>) {
+        button.setOnMouseEntered {
+            handleButtonHover(buttonsList, targetType, 1.1, 10.0)
+        }
+
+        button.setOnMouseExited {
+            handleButtonHover(buttonsList, targetType, 1.0, 5.0)
+        }
+    }
+
+    private fun handleButtonHover(buttonsList: List<Button>, targetType: Any, scale: Double, padding: Double) {
+        buttonsList.forEach { otherButton ->
+            val targetValue = when(otherButton) {
+                is DiceButton -> otherButton.type
+                is PickominoButton -> otherButton.value
+                else -> null
+            }
+            if (targetValue == targetType) {
+                otherButton.graphic.scaleX = scale
+                otherButton.graphic.scaleY = scale
+                otherButton.padding = Insets(padding)
             }
         }
     }
@@ -200,23 +200,12 @@ class VueJeu : BorderPane(){
         listeDesGardes.clear()
     }
 
-    private fun updateCadreJoueur(joueur: Int) {
-        listeJoueurs[joueur].children.addAll(listeInfoJoueurs[joueur], listeBoutonPickoSommetPile[joueur])
-        listeJoueurs[joueur].spacing = 10.0
-        listeJoueurs[joueur].padding = Insets(10.0)
-        listeJoueurs[joueur].border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
-        cadreJoueurs.children.add(listeJoueurs[joueur])
-    }
-
     fun updateStackTops(sommetsPilesPickominoJoueurs: List<Int>){
-        cadreJoueurs.children.clear()
         for (i in listeJoueurs.indices){
             val pickomino = PickominoButton(sommetsPilesPickominoJoueurs[i], true)
             pickomino.onAction = ControleurPickomino(this)
-
             listeBoutonPickoSommetPile[i] = pickomino
-            listeJoueurs[i].children.clear()
-            updateCadreJoueur(i)
+            listeJoueurs[i].children[1] = listeBoutonPickoSommetPile[i]
         }
     }
 
@@ -228,14 +217,20 @@ class VueJeu : BorderPane(){
         fixeControleurPickominos()
     }
 
+    fun updateNombrePickomino(nombrePickominoJoueurs : List<Int>) {
+        for (i in nombrePickominoJoueurs.indices)
+            listeLabelNbPickomino[i].text = "\tNombre\nde Pickomino : ${nombrePickominoJoueurs[i]}"
+    }
+
+    fun updateCadreInformation(joueurActuel : Int) {
+        val labelJoueur = cadreTourJoueur.children[1] as Label
+        labelJoueur.text = "J${joueurActuel+1}"
+        labelJoueur.styleClass[0] = "j${joueurActuel+1}"
+    }
+
     fun valuePickominoSelectionne() : Int {
         val listePickomino = listeBoutonPickoAccess+listeBoutonPickoSommetPile
         val i = listePickomino.indexOfFirst{it.isSelected}
         return if (i != -1) listePickomino[i].value else 0
-    }
-
-    fun updateNombrePickomino(nombrePickominoJoueurs : List<Int>) {
-        for (i in nombrePickominoJoueurs.indices)
-            listeLabelNbPickomino[i].text = "\tNombre\nde Pickomino : ${nombrePickominoJoueurs[i]}"
     }
 }

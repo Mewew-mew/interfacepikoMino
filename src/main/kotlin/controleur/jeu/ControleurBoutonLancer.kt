@@ -15,7 +15,14 @@ class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: Jeu
             pickomino.isSelected = false
         }
 
-        val listeDesLances = modele.lancerDes()
+        //val listeDesLances = modele.lancerDes()
+
+        // DEBUG
+        val debug = vueJeu.listeDesLances.map{it.type}
+        val listeDesLances = if (debug.isNotEmpty())
+            modele.choisirDes(debug)
+        else modele.lancerDes()
+        //-----------------
 
         vueJeu.updateDesLances(listeDesLances)
         vueJeu.boutonLancer.isDisable = true

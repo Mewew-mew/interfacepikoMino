@@ -10,7 +10,6 @@ import javafx.scene.effect.DropShadow
 import javafx.scene.image.Image
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
-import javafx.scene.text.Font
 
 
 
@@ -30,12 +29,10 @@ class VueMenu : VBox() {
         ))
 
         val labelTitre = Label("Pickomino")
-        val inputStream = javaClass.getResourceAsStream("/fonts/DeliciousHandrawn-Regular.ttf")
-        labelTitre.font = Font.loadFont(inputStream, 110.0)
-        labelTitre.styleClass.add("label-titre")
+        labelTitre.styleClass.addAll("handrawn","label-titre")
 
         labelNbrJoueur.effect = DropShadow(10.0, Color.BLACK)
-        labelNbrJoueur.styleClass.add("texte-nbr-joueurs")
+        labelNbrJoueur.styleClass.addAll("itim","texte-nbr-joueurs")
         boutonMoins.prefHeight = 50.0
         boutonMoins.prefWidth = 50.0
         boutonMoins.isDisable = true
