@@ -5,13 +5,14 @@ import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.Game
 
 class JeuPickomino {
-    val debug = true
-    private val connect = Connector.factory("172.26.82.76", "8080", debug)
+    val debug = false
+    private lateinit var connect : Connector
     private var id = 0
     private var key = 0
     private lateinit var listeJoueurs : Array<Joueur>
 
     fun init(nbJoueurs : Int) {
+        connect = Connector.factory("172.26.82.76", "8080", debug)
         val identification = connect.newGame(nbJoueurs)
         id = identification.first
         key = identification.second
@@ -20,10 +21,16 @@ class JeuPickomino {
 
     fun lancerDes(): List<DICE> {
         val joueurActuel = joueurActuel()
+        val listeDesGardesBefore = listeDesGardes()
         val listeDesLances = connect.rollDices(id, key)
-        if (listeDesGardes().isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
+        val listeDesGardesAfter = listeDesGardes()
+        // On regarde si premièrement on est pas au début d'un tour
+        // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
+        if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0) {
+                println("Joueur ${joueurActuel+1} perd un pickomino. Source : lancerDes()")
                 listeJoueurs[joueurActuel].nombrePickomino--
+            }
             listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
         }
         return listeDesLances
@@ -31,10 +38,16 @@ class JeuPickomino {
 
     fun choisirDes(listDices : List<DICE>): List<DICE> {
         val joueurActuel = joueurActuel()
+        val listeDesGardesBefore = listeDesGardes()
         val listeDesLances = connect.choiceDices(id, key, listDices)
-        if (listeDesGardes().isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
+        val listeDesGardesAfter = listeDesGardes()
+        // On regarde si premièrement on est pas au début d'un tour
+        // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
+        if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0) {
+                println("Joueur ${joueurActuel+1} perd un pickomino. Source : lancerDes()")
                 listeJoueurs[joueurActuel].nombrePickomino--
+            }
             listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
         }
         return listeDesLances
@@ -45,8 +58,10 @@ class JeuPickomino {
         if (!connect.keepDices(id, key, dice))
             return false
         if (listeDesGardes().isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0) {
+                println("Joueur ${joueurActuel+1} perd un pickomino. Source : garderDes()")
                 listeJoueurs[joueurActuel].nombrePickomino--
+            }
         }
         return true
     }
@@ -59,8 +74,10 @@ class JeuPickomino {
         val stackTopsAfter = sommetsPilesPickominoJoueurs()
         for (i in stackTopsBefore.indices)
             if (i != joueurActuel && stackTopsBefore[i] != stackTopsAfter[i]) {
-                if (listeJoueurs[i].nombrePickomino != 0)
+                if (listeJoueurs[i].nombrePickomino != 0) {
+                    println("Joueur ${i+1} perd un pickomino. Source : prendrePickomino()")
                     listeJoueurs[i].nombrePickomino--
+                }
                 break
             }
 
