@@ -30,18 +30,6 @@ class JeuPickomino {
         return listeDesLances
     }
 
-    fun choisirDes(listDices : List<DICE>): List<DICE> {
-        val joueurActuel = joueurActuel()
-        val listeDesGardes = listeDesGardes()
-        val listeDesLances = connect.choiceDices(id, key, listDices)
-        if (listeDesLances.all{it in listeDesGardes}) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
-                listeJoueurs[joueurActuel].nombrePickomino--
-            listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
-        }
-        return listeDesLances
-    }
-
     fun garderDes(dice: DICE): Boolean {
         return connect.keepDices(id, key, dice)
     }
@@ -73,7 +61,7 @@ class JeuPickomino {
     fun obtenirScoreFinal(): List<Int> {
         return connect.finalScore(id, key)
     }
-    fun obtenirEtatJeu(): Game {
+    private fun obtenirEtatJeu(): Game {
         return connect.gameState(id, key)
     }
 

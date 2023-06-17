@@ -17,7 +17,6 @@ class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: Jeu
 
         val listeDesLances = modele.lancerDes()
 
-        modele.obtenirEtatJeu()
         vueJeu.updateDesLances(listeDesLances)
         vueJeu.boutonLancer.isDisable = true
 
