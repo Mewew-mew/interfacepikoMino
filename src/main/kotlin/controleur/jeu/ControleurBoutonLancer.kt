@@ -8,7 +8,7 @@ import vue.VueJeu
 class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: JeuPickomino) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
-        for (pickomino in vueJeu.listeBoutonPickoAccess) {
+        for (pickomino in vueJeu.listeBoutonPickoAccess + vueJeu.listeBoutonPickoSommetPile) {
             pickomino.isDisable = true
             pickomino.style = "-fx-opacity: 0.5;"
             pickomino.border = null
