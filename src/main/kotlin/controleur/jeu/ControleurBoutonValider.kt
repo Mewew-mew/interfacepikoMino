@@ -10,49 +10,55 @@ import vue.VueJeu
 class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: JeuPickomino) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
-        val desSelectionne = vueJeu.listeDesLances.firstOrNull{it.isSelected}
+        val desSelectionne = vueJeu.listeDesLances.firstOrNull{it.isSelected} // On prend le déséléctionné
         val joueurActuel = modele.joueurActuel()
         if (desSelectionne != null) {
-            modele.garderDes(desSelectionne.type)
+            /*
+            On prend la liste des gardes actuel et on ajoute ceux qu'on garde.
+            Si le joueur perd en gardant un dés alors on n'aura plus accès à la liste des gardés
+            car elle sera reset.
+            */
+            val listeGarde = modele.listeDesGardes() + modele.listeDesLances().filter{it == desSelectionne.type}
 
+            modele.garderDes(desSelectionne.type) // On garde le dé
+
+            // On update nbr pickomino car garderDes met à jour les nombres
+            vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+
+            // Actualisation des listes des dés lances et gardes
             vueJeu.listeDesGardes.clear()
-            for (desLances in modele.listeDesGardes())
-                vueJeu.listeDesGardes.add(DiceButton(desLances).also{it.isDisable = true; it.border = null})
-            vueJeu.listeDesLances.removeAll{it.type == desSelectionne.type}
+            for (desGardes in listeGarde)
+                vueJeu.listeDesGardes.add(DiceButton(desGardes).also{it.isDisable = true; it.border = null})
 
             vueJeu.updateAffichageDes()
             vueJeu.boutonValider.isDisable = true
             vueJeu.clearDesLances()
 
-            val sommeDesGardes = vueJeu.sommeDes(vueJeu.listeDesGardes)
-            if (vueJeu.listeDesGardes.any{it.type == DICE.worm})
-                if (modele.listeJoueurs[joueurActuel].valueStackTop != sommeDesGardes)
-                    vueJeu.activerPickomino(sommeDesGardes, joueurActuel)
+            val ilYaUnVers = vueJeu.listeDesGardes.any{it.type == DICE.worm}
+            val sommeDesGardes = modele.sommeDes(vueJeu.listeDesGardes)
 
-            if (vueJeu.listeDesGardes.size != 8)
+            // Cas ou il y a 8 dés gardés et qu'aucun Pickomino n'a été activé ou alors qu'il n'y a pas de vers
+            if (vueJeu.listeDesGardes.size == 8) {
+                vueJeu.boutonLancer.isDisable = true // On désactive à coup sur le boutonLancer
+                if (!ilYaUnVers || !vueJeu.activerPickomino(sommeDesGardes, joueurActuel)) {
+                    vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
+                    vueJeu.updatePickominos(modele.listePickominoAccessible())
+                    vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+                    vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+                }
+            } else {
                 vueJeu.boutonLancer.isDisable = false
-            // Sinon on est dans le cas ou il y a 8 dés gardé et que aucun pickomino n'est séléctionnable
-            else if (vueJeu.valuePickominoSelectionne() == 0) {
-                vueJeu.retirerUnPickomino(joueurActuel)
-                vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
-                vueJeu.updatePickominos(modele.listePickominoAccessible())
-                vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+                if (ilYaUnVers)
+                    vueJeu.activerPickomino(sommeDesGardes, joueurActuel)
             }
 
-            modele.obtenirEtatJeu() // Debug
         } else { // Sinon un pickomino est séléctionné
             val valuePickominoSelectionne = vueJeu.valuePickominoSelectionne()
-
-            // On regarde si le pickomino a été pris sur le stack top d'un joueur
-            val joueurPris = modele.listeJoueurs.indexOfFirst{it.valueStackTop == valuePickominoSelectionne}
-            if (joueurPris != -1) // Si c'est le cas alors on retire un pickomino à son compteur au joueur concerné.
-                vueJeu.retirerUnPickomino(joueurPris)
-
-            modele.prendrePickomino(joueurActuel, valuePickominoSelectionne)
-            vueJeu.ajouterUnPickomino(joueurActuel)
+            modele.prendrePickomino(valuePickominoSelectionne)
             vueJeu.listeBoutonPickoAccess.removeIf{it.value == valuePickominoSelectionne}
-            vueJeu.updatePickominos(vueJeu.listeBoutonPickoAccess.map{it.value})
+            vueJeu.updatePickominos(modele.listePickominoAccessible())
             vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+            vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
             vueJeu.boutonValider.isDisable = true
             vueJeu.boutonLancer.isDisable = false
             vueJeu.clearDesGardes()

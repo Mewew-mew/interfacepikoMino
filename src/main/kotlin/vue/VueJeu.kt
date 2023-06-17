@@ -67,7 +67,7 @@ class VueJeu : BorderPane(){
         cadrePickominos.vgap = 15.0
         cadrePickominos.hgap = 15.0
         cadrePickominos.padding = Insets(20.0)
-        cadrePickominos.maxWidth = 780.0
+        cadrePickominos.maxWidth = 781.0
         cadrePickominos.alignment = Pos.CENTER
         cadrePickominos.children.addAll(listeBoutonPickoAccess)
 
@@ -77,11 +77,7 @@ class VueJeu : BorderPane(){
             listeInfoJoueurs[i].alignment = Pos.CENTER
             listeInfoJoueurs[i].spacing = 10.0
             listeLabelJoueurs[i].style = "-fx-font-size: 25px; -fx-text-fill: ${listeCouleur[i]};"
-            listeJoueurs[i].children.addAll(listeInfoJoueurs[i], listeBoutonPickoSommetPile[i])
-            listeJoueurs[i].spacing = 10.0
-            listeJoueurs[i].padding = Insets(10.0)
-            listeJoueurs[i].border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
-            cadreJoueurs.children.add(listeJoueurs[i])
+            updateCadreJoueur(i)
         }
 
         setMargin(cadreJoueurs, Insets(15.0))
@@ -95,6 +91,7 @@ class VueJeu : BorderPane(){
     private fun fixeControleurDes() {
         for (des in listeDesLances) {
             des.onAction = ControleurDes(this)
+
             des.setOnMouseEntered {
                 val targetType = des.type
                 listeDesLances.forEach { otherButton ->
@@ -163,17 +160,23 @@ class VueJeu : BorderPane(){
         }
     }
 
-    fun activerPickomino(value : Int, joueur : Int) {
+    fun activerPickomino(value : Int, joueur : Int) : Boolean {
+        var pickominoActive = false
         val pickominoAccess = listeBoutonPickoAccess.lastOrNull{it.value <= value}
-        pickominoAccess?.isDisable = false
-        pickominoAccess?.style = ""
+        if (pickominoAccess != null) {
+            pickominoActive = true
+            pickominoAccess.isDisable = false
+            pickominoAccess.style = ""
+        }
 
         for (i in listeBoutonPickoSommetPile.indices) {
             if (i != joueur && listeBoutonPickoSommetPile[i].value == value) {
+                pickominoActive = true
                 listeBoutonPickoSommetPile[i].isDisable = false
                 listeBoutonPickoSommetPile[i].style = ""
             }
         }
+        return pickominoActive
     }
 
     fun updateAffichageDes() {
@@ -197,19 +200,23 @@ class VueJeu : BorderPane(){
         listeDesGardes.clear()
     }
 
+    private fun updateCadreJoueur(joueur: Int) {
+        listeJoueurs[joueur].children.addAll(listeInfoJoueurs[joueur], listeBoutonPickoSommetPile[joueur])
+        listeJoueurs[joueur].spacing = 10.0
+        listeJoueurs[joueur].padding = Insets(10.0)
+        listeJoueurs[joueur].border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
+        cadreJoueurs.children.add(listeJoueurs[joueur])
+    }
+
     fun updateStackTops(sommetsPilesPickominoJoueurs: List<Int>){
         cadreJoueurs.children.clear()
         for (i in listeJoueurs.indices){
-            val pickomino =PickominoButton(sommetsPilesPickominoJoueurs[i], true)
+            val pickomino = PickominoButton(sommetsPilesPickominoJoueurs[i], true)
             pickomino.onAction = ControleurPickomino(this)
 
             listeBoutonPickoSommetPile[i] = pickomino
             listeJoueurs[i].children.clear()
-            listeJoueurs[i].children.addAll(listeInfoJoueurs[i], listeBoutonPickoSommetPile[i])
-            listeJoueurs[i].spacing = 10.0
-            listeJoueurs[i].padding = Insets(10.0)
-            listeJoueurs[i].border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
-            cadreJoueurs.children.add(listeJoueurs[i])
+            updateCadreJoueur(i)
         }
     }
 
@@ -227,27 +234,8 @@ class VueJeu : BorderPane(){
         return if (i != -1) listePickomino[i].value else 0
     }
 
-    fun sommeDes(dices : List<DiceButton>) : Int {
-        var somme = 0
-        for (dice in dices.map{it.type})
-            somme += when (dice) {
-                DICE.d1 -> 1
-                DICE.d2 -> 2
-                DICE.d3 -> 3
-                DICE.d4 -> 4
-                else -> 5
-            }
-        return somme
-    }
-
-    fun ajouterUnPickomino(joueur : Int) {
-        val nombreActuel = listeLabelNbPickomino[joueur].text.takeLastWhile{it != ' '}.toInt()
-        listeLabelNbPickomino[joueur].text = "\tNombre\nde Pickomino : ${nombreActuel+1}"
-    }
-
-    fun retirerUnPickomino(joueur : Int) {
-        val nombreActuel = listeLabelNbPickomino[joueur].text.takeLastWhile{it != ' '}.toInt()
-        if (nombreActuel != 0)
-            listeLabelNbPickomino[joueur].text = "\tNombre\nde Pickomino : ${nombreActuel-1}"
+    fun updateNombrePickomino(nombrePickominoJoueurs : List<Int>) {
+        for (i in nombrePickominoJoueurs.indices)
+            listeLabelNbPickomino[i].text = "\tNombre\nde Pickomino : ${nombrePickominoJoueurs[i]}"
     }
 }

@@ -14,17 +14,20 @@ class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: Jeu
             pickomino.border = null
             pickomino.isSelected = false
         }
-        val joueurActuel = modele.joueurActuel()
+
         val listeDesLances = modele.lancerDes()
+
         modele.obtenirEtatJeu()
         vueJeu.updateDesLances(listeDesLances)
         vueJeu.boutonLancer.isDisable = true
 
+        // Cas où tout les dés lancés sont barrés
         if (vueJeu.listeDesLances.all{it.crossed}) {
-            vueJeu.retirerUnPickomino(joueurActuel)
             vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
             vueJeu.updatePickominos(modele.listePickominoAccessible())
             vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
         }
+
+        vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
     }
 }
