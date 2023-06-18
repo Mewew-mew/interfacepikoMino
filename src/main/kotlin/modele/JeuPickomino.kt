@@ -27,10 +27,8 @@ class JeuPickomino {
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
         if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0) {
-                println("Joueur ${joueurActuel+1} perd un pickomino. Source : lancerDes()")
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
                 listeJoueurs[joueurActuel].nombrePickomino--
-            }
             listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
         }
         return listeDesLances
@@ -44,10 +42,8 @@ class JeuPickomino {
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
         if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0) {
-                println("Joueur ${joueurActuel+1} perd un pickomino. Source : lancerDes()")
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
                 listeJoueurs[joueurActuel].nombrePickomino--
-            }
             listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
         }
         return listeDesLances
@@ -58,10 +54,8 @@ class JeuPickomino {
         if (!connect.keepDices(id, key, dice))
             return false
         if (listeDesGardes().isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0) {
-                println("Joueur ${joueurActuel+1} perd un pickomino. Source : garderDes()")
+            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
                 listeJoueurs[joueurActuel].nombrePickomino--
-            }
         }
         return true
     }

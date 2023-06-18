@@ -15,6 +15,10 @@ import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
     private val sonDes = MediaPlayer(Media(javaClass.getResource("/sounds/dice_rolling.mp3")!!.toString()))
+    private val sonSelectionne = MediaPlayer(Media(javaClass.getResource("/sounds/selected.mp3")!!.toString()))
+    private val sonDeselectionne = MediaPlayer(Media(javaClass.getResource("/sounds/unselected.mp3")!!.toString()))
+    private val sonPickoPris = MediaPlayer(Media(javaClass.getResource("/sounds/take_pickomino.mp3")!!.toString()))
+
     val boutonVolume = SoundButton()
     private val cadreTourJoueur = HBox(
         Label("C'est au  tour du joueur : ").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")},
@@ -247,6 +251,27 @@ class VueJeu : BorderPane() {
         if (boutonVolume.isActive) {
             sonDes.stop()
             sonDes.play()
+        }
+    }
+
+    fun jouerSonSelectionne() {
+        if (boutonVolume.isActive) {
+            sonSelectionne.stop()
+            sonSelectionne.play()
+        }
+    }
+
+    fun jouerSonDeselectionne() {
+        if (boutonVolume.isActive) {
+            sonDeselectionne.stop()
+            sonDeselectionne.play()
+        }
+    }
+
+    fun jouerSonPickoPris() {
+        if (boutonVolume.isActive) {
+            sonPickoPris.stop()
+            sonPickoPris.play()
         }
     }
 }

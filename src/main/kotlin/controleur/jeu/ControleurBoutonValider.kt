@@ -56,6 +56,7 @@ class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: Je
 
         } else { // Sinon un pickomino est séléctionné
             val valuePickominoSelectionne = vueJeu.valuePickominoSelectionne()
+            vueJeu.jouerSonPickoPris()
             modele.prendrePickomino(valuePickominoSelectionne)
             vueJeu.listeBoutonPickoAccess.removeIf{it.value == valuePickominoSelectionne}
             vueJeu.updatePickominos(modele.listePickominoAccessible())
