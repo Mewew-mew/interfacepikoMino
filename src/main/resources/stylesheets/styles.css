@@ -147,3 +147,40 @@
 .j4 {
     -fx-text-fill: gold;
 }
+
+.bouton-rejouer {
+    -fx-background-color: #79bbff;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-padding: 18px 40px;
+}
+
+.bouton-rejouer:hover {
+    -fx-background-color: #378de5;
+}
+
+.bouton-menu {
+    -fx-background-color: #cccc21;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-padding: 18px 40px;
+}
+
+.bouton-menu:hover {
+    -fx-background-color: #abab1f;
+}
+
+
+
+.label-resultats {
+    -fx-font-size: 75px;
+    -fx-underline: true;
+}

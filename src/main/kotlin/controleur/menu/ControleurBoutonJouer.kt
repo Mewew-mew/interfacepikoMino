@@ -1,5 +1,6 @@
 package controleur.menu
 
+import Main
 import io.ktor.client.network.sockets.*
 import javafx.beans.binding.Bindings
 import javafx.event.ActionEvent
@@ -12,6 +13,7 @@ import vue.VueJeu
 import vue.VueMenu
 
 class ControleurBoutonJouer(
+    private val appli: Main,
     private val vueJeu: VueJeu,
     private val vueMenu: VueMenu,
     private val modele: JeuPickomino,
@@ -51,7 +53,7 @@ class ControleurBoutonJouer(
             stage.minWidth = 920.0
             stage.minHeight = 940.0
             stage.show()
-        } catch (e: ConnectTimeoutException) {
+        } catch (e: Exception) {
             val alert = Alert(Alert.AlertType.ERROR)
             alert.headerText = ""
             alert.contentText = "Echec de connexion au serveur, vérifier la connexion."

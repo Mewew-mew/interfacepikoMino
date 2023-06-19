@@ -25,6 +25,7 @@ class JeuPickomino {
         val joueurActuel = joueurActuel()
         val listeDesGardesBefore = listeDesGardes()
         val listeDesLances = connect.rollDices(id, key)
+        etatJeu = connect.gameState(id, key)
         val listeDesGardesAfter = listeDesGardes()
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
@@ -32,7 +33,6 @@ class JeuPickomino {
             listeJoueurs[joueurActuel].retirerPickomino()
             listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])
         }
-        etatJeu = connect.gameState(id, key)
         return listeDesLances
     }
 
@@ -40,6 +40,7 @@ class JeuPickomino {
         val joueurActuel = joueurActuel()
         val listeDesGardesBefore = listeDesGardes()
         val listeDesLances = connect.choiceDices(id, key, listDices)
+        etatJeu = connect.gameState(id, key)
         val listeDesGardesAfter = listeDesGardes()
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
@@ -47,7 +48,6 @@ class JeuPickomino {
             listeJoueurs[joueurActuel].retirerPickomino()
             listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])
         }
-        etatJeu = connect.gameState(id, key)
         return listeDesLances
     }
 
@@ -55,6 +55,7 @@ class JeuPickomino {
         val joueurActuel = joueurActuel()
         if (!connect.keepDices(id, key, dice))
             return false
+        etatJeu = connect.gameState(id, key)
         if (listeDesGardes().isEmpty()) {
             listeJoueurs[joueurActuel].retirerPickomino()
         }
@@ -67,6 +68,7 @@ class JeuPickomino {
         val stackTopsBefore = sommetsPilesPickominoJoueurs()
         if (!connect.takePickomino(id, key, pickomino))
             return false
+        etatJeu = connect.gameState(id, key)
         for (joueur in stackTopsBefore.indices)
             if (joueur != joueurActuel && stackTopsBefore[joueur] != stackTopJoueur(joueur)) {
                 listeJoueurs[joueur].retirerPickomino()

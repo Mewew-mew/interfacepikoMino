@@ -28,6 +28,7 @@ class VueJeu : BorderPane() {
     private val desLances = HBox()
     val boutonValider = Button("Valider").also{it.styleClass.addAll("bouton","bouton-valider")}
     val boutonJoueurSuivant = Button("Joueur suivant").also{it.styleClass.addAll("bouton","bouton-joueur-suivant")}
+    val boutonResultats = Button("Résultats finaux")
     private val cadreDes = HBox(desGardes, desLances)
     val cadreBoutons = HBox(boutonLancer, boutonValider)
     private val cadreCentre = BorderPane()

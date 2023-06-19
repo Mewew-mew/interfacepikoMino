@@ -1,4 +1,5 @@
 
+import controleur.fin.ControleurBoutonMenu
 import controleur.menu.ControleurBoutonJouer
 import iut.info1.pickomino.data.DICE
 import javafx.application.Application
@@ -11,42 +12,46 @@ import javafx.scene.shape.Rectangle
 import javafx.stage.Stage
 import modele.JeuPickomino
 import vue.DiceButton
+import vue.VueFin
 import vue.VueJeu
 import vue.VueMenu
 
 class Main : Application() {
-    private val vueMenu = VueMenu()
+    private var vueMenu = VueMenu()
     private var vueJeu = VueJeu()
     private var modele = JeuPickomino()
     init {
-        if (modele.debug)
-        vueJeu.setOnKeyPressed {
-            if (it.code in listOf(NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6)) {
-                if (vueJeu.listeDesLances.size < 8 - vueJeu.listeDesGardes.size) {
-                    vueJeu.boutonLancer.isDisable = true
-                    vueJeu.listeBoutonPickoAccess.forEach{picko -> picko.isDisable = true; picko.isSelected = false}
-                    vueJeu.listeBoutonPickoSommetPile.forEach{picko -> picko.isDisable = true}
-                    when (it.code) {
-                        NUMPAD1 -> vueJeu.listeDesLances.add(DiceButton(DICE.d1, modele.listeDesGardes().contains(DICE.d1)))
-                        NUMPAD2 -> vueJeu.listeDesLances.add(DiceButton(DICE.d2, modele.listeDesGardes().contains(DICE.d2)))
-                        NUMPAD3 -> vueJeu.listeDesLances.add(DiceButton(DICE.d3, modele.listeDesGardes().contains(DICE.d3)))
-                        NUMPAD4 -> vueJeu.listeDesLances.add(DiceButton(DICE.d4, modele.listeDesGardes().contains(DICE.d4)))
-                        NUMPAD5 -> vueJeu.listeDesLances.add(DiceButton(DICE.d5, modele.listeDesGardes().contains(DICE.d5)))
-                        NUMPAD6 -> vueJeu.listeDesLances.add(DiceButton(DICE.worm, modele.listeDesGardes().contains(DICE.worm)))
-                        else -> {}
+        if (modele.debug) // DEBUG
+            vueJeu.setOnKeyPressed {
+                if (it.code in listOf(NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6)) {
+                    if (vueJeu.listeDesLances.size < 8 - vueJeu.listeDesGardes.size) {
+                        vueJeu.boutonLancer.isDisable = true
+                        vueJeu.listeBoutonPickoAccess.forEach{picko -> picko.isDisable = true; picko.isSelected = false}
+                        vueJeu.listeBoutonPickoSommetPile.forEach{picko -> picko.isDisable = true}
+                        when (it.code) {
+                            NUMPAD1 -> vueJeu.listeDesLances.add(DiceButton(DICE.d1, modele.listeDesGardes().contains(DICE.d1)))
+                            NUMPAD2 -> vueJeu.listeDesLances.add(DiceButton(DICE.d2, modele.listeDesGardes().contains(DICE.d2)))
+                            NUMPAD3 -> vueJeu.listeDesLances.add(DiceButton(DICE.d3, modele.listeDesGardes().contains(DICE.d3)))
+                            NUMPAD4 -> vueJeu.listeDesLances.add(DiceButton(DICE.d4, modele.listeDesGardes().contains(DICE.d4)))
+                            NUMPAD5 -> vueJeu.listeDesLances.add(DiceButton(DICE.d5, modele.listeDesGardes().contains(DICE.d5)))
+                            NUMPAD6 -> vueJeu.listeDesLances.add(DiceButton(DICE.worm, modele.listeDesGardes().contains(DICE.worm)))
+                            else -> {}
+                        }
                     }
+                    if (vueJeu.listeDesLances.size == 8 - vueJeu.listeDesGardes.size)
+                        vueJeu.boutonLancer.isDisable = false
+                    vueJeu.updateAffichageDes()
                 }
-                if (vueJeu.listeDesLances.size == 8 - vueJeu.listeDesGardes.size)
-                    vueJeu.boutonLancer.isDisable = false
-                vueJeu.updateAffichageDes()
             }
-        }
+        //------------------------------------------------------------------------------------------------------------------------------------
     }
     override fun start(stage: Stage) {
+
+        /*
         val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
         sceneMenu.stylesheets.add("stylesheets/styles.css")
 
-        vueMenu.boutonJouer.onAction = ControleurBoutonJouer(vueJeu, vueMenu, modele, stage)
+        vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueJeu, vueMenu, modele, stage)
 
         stage.icons.add(Image("images/icon.png"))
         stage.width = 670.0
@@ -55,7 +60,28 @@ class Main : Application() {
         stage.scene = sceneMenu
         stage.title = "Pickomino"
         stage.show()
+        */
+        val vueFin = VueFin(4)
+        vueFin.boutonMenu.onAction = ControleurBoutonMenu(this, stage)
+        vueFin.test(listOf(1,2,3,4))
+        val sceneFin = Scene(vueFin)
+        sceneFin.stylesheets.add("stylesheets/styles.css")
+        stage.icons.add(Image("images/icon.png"))
+        stage.width = 1600.0
+        stage.height = 900.0
+        stage.scene = sceneFin
+        stage.title = "Pickomino"
+        stage.show()
     }
+
+    fun relancerMenu(stage: Stage) {
+        vueMenu = VueMenu()
+        vueJeu = VueJeu()
+        modele = JeuPickomino()
+        stage.close()
+        start(stage)
+    }
+
 }
 fun main() {
     Application.launch(Main::class.java)
