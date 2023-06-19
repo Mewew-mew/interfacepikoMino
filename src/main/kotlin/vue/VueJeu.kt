@@ -8,24 +8,10 @@ import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.*
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
 import javafx.scene.paint.Color
 import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
-
-    private val listeMusiques = listOf(
-        createMediaPlayer("/sounds/musics/theme1.mp3")
-    ).shuffled()
-
-    private val sonDes = createMediaPlayer("/sounds/effects/dice_rolling.mp3")
-    private val sonSelectionne = createMediaPlayer("/sounds/effects/selected.mp3")
-    private val sonDeselectionne = createMediaPlayer("/sounds/effects/unselected.mp3")
-    private val sonPickoPris = createMediaPlayer("/sounds/effects/take_pickomino.mp3")
-
-    private val boutonEffets = EffectsButton()
-    private val boutonMusique = MusicButton(listeMusiques)
 
     private val cadreTourJoueur = HBox(
         Label("C'est au  tour du joueur : ").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")},
@@ -93,8 +79,6 @@ class VueJeu : BorderPane() {
         cadrePickominos.alignment = Pos.TOP_CENTER
         cadrePickominos.children.addAll(listeBoutonPickoAccess)
 
-
-
         for (i in 0 until nbJoueurs) {
             listeInfoJoueurs[i].children.addAll(listeLabelJoueurs[i], listeLabelNbPickomino[i])
             listeInfoJoueurs[i].alignment = Pos.CENTER
@@ -114,24 +98,9 @@ class VueJeu : BorderPane() {
         cadreJoueurs.alignment = Pos.CENTER
 
         style = "-fx-background-color: #FAEBD7;"
-        top = BorderPane(
-            VBox(cadreTourJoueur, labelInformation).also{it.alignment = Pos.CENTER; setMargin(it, Insets(-55.0, 15.0, 15.0, 15.0))},
-            HBox(boutonEffets, boutonMusique).also{it.spacing = 5.0; setMargin(it, Insets(15.0, 0.0, 0.0, 15.0))},
-            null,
-            null,
-            null
-        )
+        top = VBox(cadreTourJoueur, labelInformation).also{it.alignment = Pos.CENTER; setMargin(it, Insets(15.0))}
         center = cadreCentre
         bottom = cadreJoueurs
-
-        listeMusiques.forEachIndexed{index, mediaPlayer ->
-            mediaPlayer.volume = 0.35
-            mediaPlayer.setOnEndOfMedia {
-                mediaPlayer.stop()
-                listeMusiques[(index + 1) % listeMusiques.size].play()
-            }
-        }
-        listeMusiques.first().play()
     }
 
     private fun fixeControleurDes() {
@@ -264,36 +233,7 @@ class VueJeu : BorderPane() {
         return if (i != -1) listePickomino[i].value else 0
     }
 
-    private fun createMediaPlayer(musicPath: String): MediaPlayer {
-        return MediaPlayer(Media(javaClass.getResource(musicPath)?.toExternalForm()))
-    }
+    fun transitionJouer() {
 
-
-    fun jouerSonDes() {
-        if (boutonEffets.isActive) {
-            sonDes.stop()
-            sonDes.play()
-        }
-    }
-
-    fun jouerSonSelectionne() {
-        if (boutonEffets.isActive) {
-            sonSelectionne.stop()
-            sonSelectionne.play()
-        }
-    }
-
-    fun jouerSonDeselectionne() {
-        if (boutonEffets.isActive) {
-            sonDeselectionne.stop()
-            sonDeselectionne.play()
-        }
-    }
-
-    fun jouerSonPickoPris() {
-        if (boutonEffets.isActive) {
-            sonPickoPris.stop()
-            sonPickoPris.play()
-        }
     }
 }

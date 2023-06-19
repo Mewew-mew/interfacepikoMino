@@ -10,8 +10,6 @@ import javafx.scene.control.Label
 import javafx.scene.effect.DropShadow
 import javafx.scene.image.Image
 import javafx.scene.layout.*
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
 import javafx.scene.paint.Color
 import javafx.util.Duration
 
@@ -21,9 +19,7 @@ class VueMenu : VBox() {
     val boutonPlus = Button("+").also{it.styleClass.addAll("bouton","bouton-plus")}
     val boutonJouer = Button("Jouer").also{it.styleClass.addAll("bouton","bouton-jouer")}
 
-    private val sonJouer = MediaPlayer(Media(javaClass.getResource("/sounds/effects/start_game.mp3")?.toExternalForm()))
     val fadeTransition = FadeTransition(Duration.seconds(1.5), this)
-    private val musiqueMenu = MediaPlayer(Media(javaClass.getResource("/sounds/musics/main_menu_theme.mp3")?.toExternalForm()))
 
     init {
         background = Background(BackgroundImage(
@@ -59,10 +55,6 @@ class VueMenu : VBox() {
         alignment = Pos.TOP_CENTER
         setMargin(labelTitre, Insets(115.0, 0.0, 120.0, 0.0))
         children.addAll(labelTitre, cadreJouer)
-
-        musiqueMenu.volume = 0.5
-        musiqueMenu.cycleCount = MediaPlayer.INDEFINITE
-        musiqueMenu.play()
     }
 
     fun getNbJoueurs() : Int {
@@ -70,17 +62,11 @@ class VueMenu : VBox() {
     }
 
     fun transitionJouer() {
-        musiqueMenu.stop()
-        sonJouer.setOnEndOfMedia{sonJouer.stop()}
-        sonJouer.play()
         fadeTransition.fromValue = 1.0  // Opacité de départ (100% opaque)
         fadeTransition.toValue = 0.0    // Opacité finale (0% opaque)
         fadeTransition.play()
     }
 
-    fun reprendreMusique() {
-        musiqueMenu.play()
-    }
 
     fun desactiverToutLesBoutons() {
         when {

@@ -20,7 +20,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     implementation("org.slf4j:slf4j-nop:2.0.7")
     implementation("org.controlsfx:controlsfx:11.1.2")
-    implementation("org.openjfx:javafx-media:19.0.2.1")
     implementation(files("lib/pickomino-lib-1.5.jar"))
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
@@ -30,7 +29,7 @@ dependencies {
 
 javafx {
     version = "19"
-    modules("javafx.controls", "javafx.media", "javafx.fxml")
+    modules("javafx.controls", "javafx.fxml")
 }
 
 tasks.test {
