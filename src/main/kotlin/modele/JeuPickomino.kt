@@ -5,8 +5,9 @@ import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.Game
 
 class JeuPickomino {
-    val debug = false
+    val debug = true
     private lateinit var connect : Connector
+    private lateinit var etatJeu : Game
     private var id = 0
     private var key = 0
     private lateinit var listeJoueurs : Array<Joueur>
@@ -16,6 +17,7 @@ class JeuPickomino {
         val identification = connect.newGame(nbJoueurs)
         id = identification.first
         key = identification.second
+        etatJeu = connect.gameState(id, key)
         listeJoueurs = Array(nbJoueurs){Joueur()}
     }
 
@@ -27,14 +29,14 @@ class JeuPickomino {
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
         if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
-                listeJoueurs[joueurActuel].nombrePickomino--
-            listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
+            listeJoueurs[joueurActuel].retirerPickomino()
+            listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])
         }
+        etatJeu = connect.gameState(id, key)
         return listeDesLances
     }
 
-    fun choisirDes(listDices : List<DICE>): List<DICE> {
+    fun choisirDes(listDices : List<DICE>): List<DICE> /*DEBUG*/ {
         val joueurActuel = joueurActuel()
         val listeDesGardesBefore = listeDesGardes()
         val listeDesLances = connect.choiceDices(id, key, listDices)
@@ -42,10 +44,10 @@ class JeuPickomino {
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
         if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
-                listeJoueurs[joueurActuel].nombrePickomino--
-            listeJoueurs[joueurActuel].valueStackTop = sommetsPilesPickominoJoueurs()[joueurActuel]
+            listeJoueurs[joueurActuel].retirerPickomino()
+            listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])
         }
+        etatJeu = connect.gameState(id, key)
         return listeDesLances
     }
 
@@ -54,9 +56,9 @@ class JeuPickomino {
         if (!connect.keepDices(id, key, dice))
             return false
         if (listeDesGardes().isEmpty()) {
-            if (listeJoueurs[joueurActuel].nombrePickomino != 0)
-                listeJoueurs[joueurActuel].nombrePickomino--
+            listeJoueurs[joueurActuel].retirerPickomino()
         }
+        etatJeu = connect.gameState(id, key)
         return true
     }
 
@@ -65,50 +67,47 @@ class JeuPickomino {
         val stackTopsBefore = sommetsPilesPickominoJoueurs()
         if (!connect.takePickomino(id, key, pickomino))
             return false
-        val stackTopsAfter = sommetsPilesPickominoJoueurs()
-        for (i in stackTopsBefore.indices)
-            if (i != joueurActuel && stackTopsBefore[i] != stackTopsAfter[i]) {
-                if (listeJoueurs[i].nombrePickomino != 0) {
-                    println("Joueur ${i+1} perd un pickomino. Source : prendrePickomino()")
-                    listeJoueurs[i].nombrePickomino--
-                }
+        for (joueur in stackTopsBefore.indices)
+            if (joueur != joueurActuel && stackTopsBefore[joueur] != stackTopJoueur(joueur)) {
+                listeJoueurs[joueur].retirerPickomino()
                 break
             }
-
-        listeJoueurs[joueurActuel].valueStackTop = stackTopsAfter[joueurActuel]
-        listeJoueurs[joueurActuel].nombrePickomino++
+        listeJoueurs[joueurActuel].ajouterPickomino()
+        listeJoueurs[joueurActuel].updateStackTop(stackTopJoueur(joueurActuel))
+        etatJeu = connect.gameState(id, key)
         return true
     }
 
+    private fun stackTopJoueur(joueur : Int) : Int {
+        return sommetsPilesPickominoJoueurs()[joueur]
+    }
+
     fun donneNombrePickominoJoueurs(): List<Int> {
-        return listeJoueurs.map{it.nombrePickomino}
+        return listeJoueurs.map{it.getNombrePickomino()}
     }
 
     fun obtenirScoreFinal(): List<Int> {
         return connect.finalScore(id, key)
     }
-    private fun obtenirEtatJeu(): Game {
-        return connect.gameState(id, key)
-    }
 
     fun listeDesGardes() : List<DICE> {
-        return obtenirEtatJeu().current.keptDices
+        return etatJeu.current.keptDices
     }
 
     fun listeDesLances() : List<DICE> {
-        return obtenirEtatJeu().current.rolls
+        return etatJeu.current.rolls
     }
 
     fun joueurActuel() : Int {
-        return obtenirEtatJeu().current.player
+        return etatJeu.current.player
     }
 
     fun listePickominoAccessible() : List<Int> {
-        return obtenirEtatJeu().accessiblePickos()
+        return etatJeu.accessiblePickos()
     }
 
     fun sommetsPilesPickominoJoueurs(): List<Int> {
-        return obtenirEtatJeu().pickosStackTops()
+        return etatJeu.pickosStackTops()
     }
 
     fun sommeDes(dices : List<DICE>) : Int {

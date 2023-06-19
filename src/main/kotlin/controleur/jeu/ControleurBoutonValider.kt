@@ -46,15 +46,19 @@ class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: Je
                 vueJeu.boutonLancer.isDisable = true // On désactive à coup sur le boutonLancer
                 if (!ilYaUnVers || !vueJeu.activerPickomino(sommeDesGardes, joueurActuel)) {
                     vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
-                }
+                    vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
+                } else
+                    vueJeu.labelInformation.text = "Vous pouvez prendre un Pickomino !"
             } else {
                 vueJeu.boutonLancer.isDisable = false
-                if (ilYaUnVers) {
-                    vueJeu.activerPickomino(sommeDesGardes, joueurActuel)
-                }
+                if (ilYaUnVers && vueJeu.activerPickomino(sommeDesGardes, joueurActuel))
+                    vueJeu.labelInformation.text = "Vous pouvez lancer les dés ou prendre un Pickomino !"
+                else
+                    vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
             }
 
         } else { // Sinon un pickomino est séléctionné
+            vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
             val valuePickominoSelectionne = vueJeu.valuePickominoSelectionne()
             vueJeu.jouerSonPickoPris()
             modele.prendrePickomino(valuePickominoSelectionne)

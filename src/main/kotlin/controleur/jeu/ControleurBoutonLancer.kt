@@ -30,9 +30,12 @@ class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: Jeu
 
         // Cas où tout les dés lancés sont barrés
         if (vueJeu.listeDesLances.all{it.crossed}) {
+            vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
             vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
             vueJeu.updatePickominos(modele.listePickominoAccessible())
             vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+        } else {
+            vueJeu.labelInformation.text = "Vous pouvez choisir un type de dé à garder !"
         }
 
         vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())

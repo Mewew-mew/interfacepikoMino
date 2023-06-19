@@ -5,6 +5,9 @@ import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.scene.input.KeyCode.*
+import javafx.scene.layout.StackPane
+import javafx.scene.paint.Color
+import javafx.scene.shape.Rectangle
 import javafx.stage.Stage
 import modele.JeuPickomino
 import vue.DiceButton
@@ -16,7 +19,6 @@ class Main : Application() {
     private var vueJeu = VueJeu()
     private var modele = JeuPickomino()
     init {
-        vueMenu.fixeControleurBoutons()
         if (modele.debug)
         vueJeu.setOnKeyPressed {
             if (it.code in listOf(NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6)) {
@@ -41,7 +43,7 @@ class Main : Application() {
         }
     }
     override fun start(stage: Stage) {
-        val sceneMenu = Scene(vueMenu)
+        val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
         sceneMenu.stylesheets.add("stylesheets/styles.css")
 
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(vueJeu, vueMenu, modele, stage)

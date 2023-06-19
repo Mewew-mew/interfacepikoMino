@@ -7,8 +7,11 @@ import vue.VueMenu
 class ControleurBoutonMoins(private val vueMenu: VueMenu) : EventHandler<ActionEvent> {
     override fun handle(event: ActionEvent) {
         vueMenu.boutonPlus.isDisable = false
-        if (vueMenu.getNbJoueurs() == 3)
+        vueMenu.boutonPlus.opacity = 1.0
+        if (vueMenu.getNbJoueurs() == 3) {
             vueMenu.boutonMoins.isDisable = true
+            vueMenu.boutonMoins.opacity = 0.4
+        }
         vueMenu.labelNbrJoueur.text = "Joueurs : ${vueMenu.getNbJoueurs()-1}"
     }
 }

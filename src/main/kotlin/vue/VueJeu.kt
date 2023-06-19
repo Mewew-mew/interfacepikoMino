@@ -14,17 +14,28 @@ import javafx.scene.paint.Color
 import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
-    private val sonDes = MediaPlayer(Media(javaClass.getResource("/sounds/dice_rolling.mp3")!!.toString()))
-    private val sonSelectionne = MediaPlayer(Media(javaClass.getResource("/sounds/selected.mp3")!!.toString()))
-    private val sonDeselectionne = MediaPlayer(Media(javaClass.getResource("/sounds/unselected.mp3")!!.toString()))
-    private val sonPickoPris = MediaPlayer(Media(javaClass.getResource("/sounds/take_pickomino.mp3")!!.toString()))
 
-    val boutonVolume = SoundButton()
+    private val listeMusiques = listOf(
+        createMediaPlayer("/sounds/musics/theme1.mp3")
+    ).shuffled()
+
+    private val sonDes = createMediaPlayer("/sounds/effects/dice_rolling.mp3")
+    private val sonSelectionne = createMediaPlayer("/sounds/effects/selected.mp3")
+    private val sonDeselectionne = createMediaPlayer("/sounds/effects/unselected.mp3")
+    private val sonPickoPris = createMediaPlayer("/sounds/effects/take_pickomino.mp3")
+
+    private val boutonEffets = EffectsButton()
+    private val boutonMusique = MusicButton(listeMusiques)
+
     private val cadreTourJoueur = HBox(
         Label("C'est au  tour du joueur : ").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")},
         Label("J1").also{it.style = "-fx-font-size: 55px;"; it.styleClass.addAll("itim","j1")}
     ).also{it.alignment = Pos.CENTER}
-    private val labelInformation = Label("Vous pouvez lancer les dés !").also{it.style="-fx-font-size: 30px; -fx-underline: true;"; it.styleClass.add("handrawn")}
+    val labelInformation = Label("Vous pouvez lancer les dés !").also{
+        it.style="-fx-font-size: 30px; -fx-underline: true;"
+        it.styleClass.add("handrawn")
+        it.padding = Insets(0.0,0.0,2.5,0.0)
+    }
     private val cadrePickominos = FlowPane(HORIZONTAL)
     val boutonLancer = Button("Lancer").also{it.styleClass.addAll("bouton","bouton-lancer")}
     private val desGardes = HBox()
@@ -102,11 +113,10 @@ class VueJeu : BorderPane() {
 
         cadreJoueurs.alignment = Pos.CENTER
 
-
-
+        style = "-fx-background-color: #FAEBD7;"
         top = BorderPane(
             VBox(cadreTourJoueur, labelInformation).also{it.alignment = Pos.CENTER; setMargin(it, Insets(-55.0, 15.0, 15.0, 15.0))},
-            boutonVolume,
+            HBox(boutonEffets, boutonMusique).also{it.spacing = 5.0; setMargin(it, Insets(15.0, 0.0, 0.0, 15.0))},
             null,
             null,
             null
@@ -114,7 +124,14 @@ class VueJeu : BorderPane() {
         center = cadreCentre
         bottom = cadreJoueurs
 
-        style = "-fx-background-color: #FAEBD7;"
+        listeMusiques.forEachIndexed{index, mediaPlayer ->
+            mediaPlayer.volume = 0.35
+            mediaPlayer.setOnEndOfMedia {
+                mediaPlayer.stop()
+                listeMusiques[(index + 1) % listeMusiques.size].play()
+            }
+        }
+        listeMusiques.first().play()
     }
 
     private fun fixeControleurDes() {
@@ -247,29 +264,34 @@ class VueJeu : BorderPane() {
         return if (i != -1) listePickomino[i].value else 0
     }
 
+    private fun createMediaPlayer(musicPath: String): MediaPlayer {
+        return MediaPlayer(Media(javaClass.getResource(musicPath)?.toExternalForm()))
+    }
+
+
     fun jouerSonDes() {
-        if (boutonVolume.isActive) {
+        if (boutonEffets.isActive) {
             sonDes.stop()
             sonDes.play()
         }
     }
 
     fun jouerSonSelectionne() {
-        if (boutonVolume.isActive) {
+        if (boutonEffets.isActive) {
             sonSelectionne.stop()
             sonSelectionne.play()
         }
     }
 
     fun jouerSonDeselectionne() {
-        if (boutonVolume.isActive) {
+        if (boutonEffets.isActive) {
             sonDeselectionne.stop()
             sonDeselectionne.play()
         }
     }
 
     fun jouerSonPickoPris() {
-        if (boutonVolume.isActive) {
+        if (boutonEffets.isActive) {
             sonPickoPris.stop()
             sonPickoPris.play()
         }

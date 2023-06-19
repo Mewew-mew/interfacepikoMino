@@ -12,5 +12,6 @@ class ControleurBoutonJoueurSuivant(private val vueJeu: VueJeu, private val mode
         vueJeu.clearDesLances()
         vueJeu.clearDesGardes()
         vueJeu.updateCadreInformation(modele.joueurActuel())
+        vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
     }
 }

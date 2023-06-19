@@ -18,8 +18,13 @@ class ControleurBoutonJouer(
     private val stage: Stage
 ) : EventHandler<ActionEvent> {
     override fun handle(event: ActionEvent) {
+        vueMenu.desactiverToutLesBoutons()
         val nbJoueurs = vueMenu.getNbJoueurs()
+        vueMenu.fadeTransition.setOnFinished{lancerJeu(nbJoueurs)}
+        vueMenu.transitionJouer()
+    }
 
+    private fun lancerJeu(nbJoueurs : Int) {
         try {
             modele.init(nbJoueurs)
             vueJeu.init(nbJoueurs)
@@ -51,6 +56,9 @@ class ControleurBoutonJouer(
             alert.headerText = ""
             alert.contentText = "Echec de connexion au serveur, vérifier la connexion."
             alert.title = "Erreur de connexion"
+            vueMenu.opacity = 1.0
+            vueMenu.reprendreMusique()
+            vueMenu.activerToutLesBoutons()
             alert.show()
         }
     }
