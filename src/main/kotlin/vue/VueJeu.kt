@@ -1,14 +1,17 @@
 package vue
 
+import Main
 import controleur.jeu.*
 import iut.info1.pickomino.data.DICE
 import javafx.geometry.Insets
 import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Pos
+import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
+import javafx.stage.Stage
 import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
@@ -28,7 +31,7 @@ class VueJeu : BorderPane() {
     private val desLances = HBox()
     val boutonValider = Button("Valider").also{it.styleClass.addAll("bouton","bouton-valider")}
     val boutonJoueurSuivant = Button("Joueur suivant").also{it.styleClass.addAll("bouton","bouton-joueur-suivant")}
-    val boutonResultats = Button("Résultats finaux")
+    private val boutonResultats = Button("Résultats finaux")
     private val cadreDes = HBox(desGardes, desLances)
     val cadreBoutons = HBox(boutonLancer, boutonValider)
     private val cadreCentre = BorderPane()
@@ -143,9 +146,9 @@ class VueJeu : BorderPane() {
         }
     }
 
-    fun fixeControleurBoutons(modele: JeuPickomino) {
-        boutonLancer.onAction = ControleurBoutonLancer(this, modele)
-        boutonValider.onAction = ControleurBoutonValider(this, modele)
+    fun fixeControleurBoutons(appli: Main, stage: Stage, modele: JeuPickomino) {
+        boutonLancer.onAction = ControleurBoutonLancer(appli, stage, this, modele)
+        boutonValider.onAction = ControleurBoutonValider(appli, stage, this, modele)
         boutonJoueurSuivant.onAction = ControleurBoutonJoueurSuivant(this, modele)
     }
 
@@ -234,7 +237,24 @@ class VueJeu : BorderPane() {
         return if (i != -1) listePickomino[i].value else 0
     }
 
-    fun transitionJouer() {
-
+    fun declencherFinPartie(appli: Main, stage: Stage, modele: JeuPickomino) {
+        cadreTourJoueur.children.setAll(Label("C'est la fin de la partie !").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")})
+        labelInformation.text = ""
+        center = boutonResultats
+        boutonResultats.setOnAction {
+            val vueFin = VueFin(listeBoutonPickoSommetPile.size)
+            vueFin.boutonMenu.setOnAction{appli.relancerMenu(stage)}
+            vueFin.boutonRejouer.setOnAction{appli.resetPartie(); appli.lancerPartie(listeJoueurs.size, stage); appli.activerModeDebug()}
+            vueFin.init(modele.obtenirScoreFinal())
+            val sceneFin = Scene(vueFin)
+            sceneFin.stylesheets.add("stylesheets/styles.css")
+            stage.close()
+            stage.width = 1600.0
+            stage.height = 900.0
+            stage.minWidth = 1280.0
+            stage.minHeight = 940.0
+            stage.scene = sceneFin
+            stage.show()
+        }
     }
 }

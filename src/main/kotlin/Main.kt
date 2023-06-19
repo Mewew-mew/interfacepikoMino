@@ -1,9 +1,11 @@
 
-import controleur.fin.ControleurBoutonMenu
 import controleur.menu.ControleurBoutonJouer
+import io.ktor.client.network.sockets.*
 import iut.info1.pickomino.data.DICE
 import javafx.application.Application
+import javafx.beans.binding.Bindings
 import javafx.scene.Scene
+import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.scene.input.KeyCode.*
 import javafx.scene.layout.StackPane
@@ -12,17 +14,99 @@ import javafx.scene.shape.Rectangle
 import javafx.stage.Stage
 import modele.JeuPickomino
 import vue.DiceButton
-import vue.VueFin
 import vue.VueJeu
 import vue.VueMenu
+import java.net.http.HttpTimeoutException
 
 class Main : Application() {
     private var vueMenu = VueMenu()
     private var vueJeu = VueJeu()
     private var modele = JeuPickomino()
-    init {
+
+
+    override fun start(stage: Stage) {
+        stage.close()
+        val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
+        sceneMenu.stylesheets.add("stylesheets/styles.css")
+        vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueMenu, stage)
+        activerModeDebug() // DEBUG
+
+        stage.icons.add(Image("images/icon.png"))
+        stage.minWidth = 670.0
+        stage.minHeight = 670.0
+        stage.width = 670.0
+        stage.height = 670.0
+        stage.isResizable = false
+        stage.scene = sceneMenu
+        stage.title = "Pickomino"
+        stage.show()
+    }
+
+    fun relancerMenu(stage: Stage) {
+        vueMenu = VueMenu()
+        resetPartie()
+        start(stage)
+    }
+
+    fun lancerPartie(nbJoueurs : Int, stage: Stage) {
+        try {
+            modele.init(nbJoueurs)
+            vueJeu.init(nbJoueurs)
+            vueJeu.fixeControleurBoutons(this, stage, modele)
+
+            val spacingBinding = Bindings.createDoubleBinding(
+                {(stage.width-201*nbJoueurs) / (nbJoueurs-1)},
+                stage.widthProperty()
+            )
+
+            vueJeu.cadreJoueurs.spacingProperty().bind(spacingBinding)
+            stage.isResizable = true
+
+            val sceneJeu = Scene(vueJeu)
+            sceneJeu.stylesheets.add("stylesheets/styles.css")
+            stage.scene = sceneJeu
+
+            vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+            vueJeu.updatePickominos(modele.listePickominoAccessible())
+
+            stage.close()
+            stage.width = 1600.0
+            stage.height = 900.0
+            stage.minWidth = 920.0
+            stage.minHeight = 940.0
+            stage.show()
+        } catch (e: HttpTimeoutException) {
+            afficherAlert()
+        } catch (e: ConnectTimeoutException) {
+            afficherAlert()
+        }
+    }
+
+    private fun afficherAlert() {
+        val alert = Alert(Alert.AlertType.ERROR)
+        alert.headerText = ""
+        alert.contentText = "Echec de connexion au serveur, vérifier la connexion."
+        alert.title = "Erreur de connexion"
+        vueMenu.opacity = 1.0
+        vueMenu.activerToutLesBoutons()
+        alert.show()
+    }
+
+    fun resetPartie() {
+        vueJeu = VueJeu()
+        modele = JeuPickomino()
+    }
+
+    fun activerModeDebug() {
         if (modele.debug) // DEBUG
             vueJeu.setOnKeyPressed {
+                if (it.code == NUMPAD0) {
+                    for (i in 0 until vueJeu.listeBoutonPickoAccess.size-1) {
+                        modele.choisirDes(listOf(DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1))
+                        modele.garderDes(DICE.d1)
+                    }
+                    vueJeu.updatePickominos(modele.listePickominoAccessible())
+                }
                 if (it.code in listOf(NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6)) {
                     if (vueJeu.listeDesLances.size < 8 - vueJeu.listeDesGardes.size) {
                         vueJeu.boutonLancer.isDisable = true
@@ -43,45 +127,7 @@ class Main : Application() {
                     vueJeu.updateAffichageDes()
                 }
             }
-        //------------------------------------------------------------------------------------------------------------------------------------
     }
-    override fun start(stage: Stage) {
-
-        /*
-        val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
-        sceneMenu.stylesheets.add("stylesheets/styles.css")
-
-        vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueJeu, vueMenu, modele, stage)
-
-        stage.icons.add(Image("images/icon.png"))
-        stage.width = 670.0
-        stage.height = 670.0
-        stage.isResizable = false
-        stage.scene = sceneMenu
-        stage.title = "Pickomino"
-        stage.show()
-        */
-        val vueFin = VueFin(4)
-        vueFin.boutonMenu.onAction = ControleurBoutonMenu(this, stage)
-        vueFin.test(listOf(1,2,3,4))
-        val sceneFin = Scene(vueFin)
-        sceneFin.stylesheets.add("stylesheets/styles.css")
-        stage.icons.add(Image("images/icon.png"))
-        stage.width = 1600.0
-        stage.height = 900.0
-        stage.scene = sceneFin
-        stage.title = "Pickomino"
-        stage.show()
-    }
-
-    fun relancerMenu(stage: Stage) {
-        vueMenu = VueMenu()
-        vueJeu = VueJeu()
-        modele = JeuPickomino()
-        stage.close()
-        start(stage)
-    }
-
 }
 fun main() {
     Application.launch(Main::class.java)

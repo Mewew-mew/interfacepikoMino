@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle
 
 class VueFin(private val nbJoueurs : Int) : BorderPane() {
 
-    private val boutonRejouer = Button("Rejouer").also{it.styleClass.addAll("bouton", "bouton-rejouer")}
+    val boutonRejouer = Button("Rejouer").also{it.styleClass.addAll("bouton", "bouton-rejouer")}
     val boutonMenu = Button("Menu").also{it.styleClass.addAll("bouton", "bouton-menu")}
 
     init {
@@ -24,11 +24,9 @@ class VueFin(private val nbJoueurs : Int) : BorderPane() {
         val imagePoulet = ImageView(Image("images/poulet-sartek.png", 450.0, 338.0, true, false))
         setMargin(imagePoulet, Insets(100.0, 20.0, 0.0, 0.0))
         top = BorderPane(cadreLabelHaut, null, imagePoulet, null, null)
-
-
     }
 
-    fun test(scoreFinaux : List<Int>) {
+    fun init(scoreFinaux : List<Int>) {
         val listeJoueurs = Array(nbJoueurs){i -> i+1}
         val podium = listeJoueurs.zip(scoreFinaux).sortedByDescending{it.second}
         val cadreCentre = HBox().also{it.spacing = 50.0; it.alignment = Pos.CENTER}

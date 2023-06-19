@@ -1,13 +1,20 @@
 package controleur.jeu
 
+import Main
 import iut.info1.pickomino.data.DICE
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.stage.Stage
 import modele.JeuPickomino
 import vue.DiceButton
 import vue.VueJeu
 
-class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: JeuPickomino) : EventHandler<ActionEvent> {
+class ControleurBoutonValider(
+    private val appli: Main,
+    private val stage: Stage,
+    private val vueJeu: VueJeu,
+    private val modele: JeuPickomino
+) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
         val desSelectionne = vueJeu.listeDesLances.firstOrNull{it.isSelected} // On prend le déséléctionné
@@ -45,8 +52,13 @@ class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: Je
             if (vueJeu.listeDesGardes.size == 8) {
                 vueJeu.boutonLancer.isDisable = true // On désactive à coup sur le boutonLancer
                 if (!ilYaUnVers || !vueJeu.activerPickomino(sommeDesGardes, joueurActuel)) {
-                    vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
-                    vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
+                    // Si il ne reste plus de Pickomino
+                    if (vueJeu.listeBoutonPickoAccess.isEmpty())
+                        vueJeu.declencherFinPartie(appli, stage, modele)
+                    else {
+                        vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
+                        vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
+                    }
                 } else
                     vueJeu.labelInformation.text = "Vous pouvez prendre un Pickomino !"
             } else {
@@ -69,6 +81,9 @@ class ControleurBoutonValider(private val vueJeu: VueJeu, private val modele: Je
             vueJeu.boutonLancer.isDisable = false
             vueJeu.clearDesGardes()
             vueJeu.updateCadreInformation(modele.joueurActuel())
+            // Si il ne reste plus de Pickomino
+            if (vueJeu.listeBoutonPickoAccess.isEmpty())
+                vueJeu.declencherFinPartie(appli, stage, modele)
         }
     }
 }

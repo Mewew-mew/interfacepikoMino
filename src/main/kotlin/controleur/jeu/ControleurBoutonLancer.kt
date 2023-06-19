@@ -1,11 +1,18 @@
 package controleur.jeu
 
+import Main
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.stage.Stage
 import modele.JeuPickomino
 import vue.VueJeu
 
-class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: JeuPickomino) : EventHandler<ActionEvent> {
+class ControleurBoutonLancer(
+    private val appli: Main,
+    private val stage: Stage,
+    private val vueJeu: VueJeu,
+    private val modele: JeuPickomino
+) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
         for (pickomino in vueJeu.listeBoutonPickoAccess + vueJeu.listeBoutonPickoSommetPile) {
@@ -29,14 +36,16 @@ class ControleurBoutonLancer(private val vueJeu: VueJeu, private val modele: Jeu
 
         // Cas où tout les dés lancés sont barrés
         if (vueJeu.listeDesLances.all{it.crossed}) {
-            vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
-            vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
             vueJeu.updatePickominos(modele.listePickominoAccessible())
             vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
-        } else {
-            vueJeu.labelInformation.text = "Vous pouvez choisir un type de dé à garder !"
-        }
-
+            // Si il ne reste plus de Pickomino
+            if (vueJeu.listeBoutonPickoAccess.isEmpty())
+                vueJeu.declencherFinPartie(appli, stage, modele)
+            else {
+                vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
+                vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
+            }
+        } else vueJeu.labelInformation.text = "Vous pouvez choisir un type de dé à garder !"
         vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
     }
 }
