@@ -88,6 +88,7 @@ class Main : Application() {
         alert.contentText = "Echec de connexion au serveur, vérifier la connexion."
         alert.title = "Erreur de connexion"
         vueMenu.opacity = 1.0
+        vueMenu.reprendreMusique()
         vueMenu.activerToutLesBoutons()
         alert.show()
     }

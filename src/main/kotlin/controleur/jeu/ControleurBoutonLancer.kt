@@ -15,6 +15,7 @@ class ControleurBoutonLancer(
 ) : EventHandler<ActionEvent> {
 
     override fun handle(event: ActionEvent) {
+        vueJeu.jouerSonDes()
         for (pickomino in vueJeu.listeBoutonPickoAccess + vueJeu.listeBoutonPickoSommetPile) {
             pickomino.isDisable = true
             pickomino.style = "-fx-opacity: 0.5;"

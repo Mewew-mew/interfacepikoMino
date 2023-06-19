@@ -14,10 +14,13 @@ class ControleurDes(private val vueJeu: VueJeu) : EventHandler<ActionEvent> {
         for (des in vueJeu.listeDesLances) {
             if (des.type == typeDes) {
                 des.isSelected = !des.isSelected
-                if (des.isSelected)
+                if (des.isSelected) {
+                    vueJeu.jouerSonSelectionne()
                     des.border = Border(BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
-                else
+                } else {
+                    vueJeu.jouerSonDeselectionne()
                     des.border = null
+                }
             }
             else {
                 des.border = null

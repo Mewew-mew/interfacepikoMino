@@ -29,7 +29,7 @@ dependencies {
 
 javafx {
     version = "19"
-    modules("javafx.controls", "javafx.fxml")
+    modules("javafx.controls", "javafx.media", "javafx.fxml")
 }
 
 tasks.test {

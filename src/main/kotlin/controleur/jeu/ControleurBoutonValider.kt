@@ -72,6 +72,7 @@ class ControleurBoutonValider(
         } else { // Sinon un pickomino est séléctionné
             vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
             val valuePickominoSelectionne = vueJeu.valuePickominoSelectionne()
+            vueJeu.jouerSonPickoPris()
             modele.prendrePickomino(valuePickominoSelectionne)
             vueJeu.listeBoutonPickoAccess.removeIf{it.value == valuePickominoSelectionne}
             vueJeu.updatePickominos(modele.listePickominoAccessible())

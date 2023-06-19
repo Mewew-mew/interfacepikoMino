@@ -24,9 +24,12 @@ class ControleurPickomino(private val vueJeu: VueJeu) : EventHandler<ActionEvent
 
         pickomino.isSelected = !pickomino.isSelected
         vueJeu.boutonValider.isDisable = !pickomino.isSelected
-        if (pickomino.isSelected)
+        if (pickomino.isSelected) {
+            vueJeu.jouerSonSelectionne()
             pickomino.border = Border(BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
-        else
+        } else {
+            vueJeu.jouerSonDeselectionne()
             pickomino.border = null
+        }
     }
 }
