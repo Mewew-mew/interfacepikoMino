@@ -9,7 +9,7 @@ plugins {
 
 group = "iut.info1"
 version = "1.0-SNAPSHOT"
-val ktor_version: String by project
+val ktorVersion: String by project
 
 repositories {
     mavenCentral()
@@ -21,15 +21,11 @@ dependencies {
     implementation("org.slf4j:slf4j-nop:2.0.7")
     implementation("org.controlsfx:controlsfx:11.1.2")
     implementation(files("lib/pickomino-lib-1.5.jar"))
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    }
-
-
-
-
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+}
 
 javafx {
     version = "19"

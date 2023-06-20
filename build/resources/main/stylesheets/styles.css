@@ -1,0 +1,206 @@
+@font-face {
+    font-family: 'Delicious Handrawn';
+    src: url('fonts/DeliciousHandrawn-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Itim';
+    src: url('fonts/Itim-Regular.ttf');
+}
+
+.handrawn {
+    -fx-font-family: 'Delicious Handrawn';
+}
+
+.itim {
+    -fx-font-family: 'Itim';
+}
+
+.label-titre {
+    -fx-font-size: 110px;
+    -fx-text-fill: #FFCC33;
+    -fx-font-style: italic;
+}
+
+.texte-nbr-joueurs {
+    -fx-font-size: 35px;
+    -fx-text-fill: #FFFFFF;
+    -fx-stroke: black
+}
+
+.bouton-moins {
+    -fx-background-color: #f53939;
+    -fx-cursor: hand;
+    -fx-text-fill: black;
+    -fx-font-size: 24px;
+    -fx-text-decoration: none;
+}
+
+.bouton-moins:hover {
+    -fx-background-color: #ff0000;
+}
+
+.bouton-plus {
+    -fx-background-color: #2e82ff;
+    -fx-cursor: hand;
+    -fx-text-fill: black;
+    -fx-font-family: Arial;
+    -fx-font-size: 24px;
+    -fx-text-decoration: none;
+}
+
+.bouton-plus:hover {
+    -fx-background-color: #4a6eff;
+}
+
+.bouton-jouer {
+    -fx-background-color: #f0c911;
+    -fx-border-radius: 30px;
+    -fx-background-radius: 30px;
+    -fx-border-width: 2px;
+    -fx-border-color: #e65f44;
+    -fx-cursor: hand;
+    -fx-text-fill: #c92200;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-padding: 18px 60px;
+    -fx-text-decoration: none;
+}
+
+.bouton-jouer:hover {
+    -fx-background-color: #f2ab1e;
+}
+
+.bouton-lancer {
+    -fx-background-color: #348ded;
+    -fx-background-radius: 30px;
+    -fx-border-radius:30px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-cursor: hand;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size:17px;
+    -fx-padding:22px 39px;
+    -fx-text-decoration: none;
+}
+
+.bouton-lancer:hover {
+    -fx-background-color:#266fbd;
+}
+
+.bouton-valider {
+        -fx-background-color: limegreen;
+        -fx-background-radius: 30px;
+        -fx-border-radius:30px;
+        -fx-border-width: 2px;
+        -fx-border-color: black;
+        -fx-cursor: hand;
+        -fx-text-fill: #FFFFFF;
+        -fx-font-size:17px;
+        -fx-padding:22px 39px;
+        -fx-text-decoration: none;
+}
+
+.bouton-valider:hover {
+    -fx-background-color: #588401;
+}
+
+.bouton-joueur-suivant {
+    -fx-background-color: goldenrod;
+    -fx-background-radius: 30px;
+    -fx-border-radius:30px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-cursor: hand;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size:17px;
+    -fx-padding:22px 39px;
+    -fx-text-decoration: none;
+}
+
+.bouton-joueur-suivant:hover {
+    -fx-background-color: darkgoldenrod;
+}
+
+.bouton-resultats {
+    -fx-background-color: #f24537;
+    -fx-border-radius: 24px;
+        -fx-background-radius: 24px;
+    -fx-border-width: 3px;
+    -fx-border-color: #121212;
+    -fx-cursor: hand;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-padding: 32px 76px;
+}
+
+.bouton-resultats:hover {
+    -fx-background-color: #c62d1f;
+}
+
+.bouton:pressed {
+    -fx-translate-y: 1px;
+}
+
+.bordered-hbox {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
+
+.j1 {
+    -fx-text-fill: red;
+}
+
+.j2 {
+    -fx-text-fill: blue;
+}
+
+.j3 {
+    -fx-text-fill: green;
+}
+
+.j4 {
+    -fx-text-fill: goldenrod;
+}
+
+.bouton-rejouer {
+    -fx-background-color: #79bbff;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-padding: 18px 40px;
+}
+
+.bouton-rejouer:hover {
+    -fx-background-color: #378de5;
+}
+
+.bouton-menu {
+    -fx-background-color: #cccc21;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-padding: 18px 40px;
+}
+
+.bouton-menu:hover {
+    -fx-background-color: #abab1f;
+}
+
+.label-resultats {
+    -fx-font-size: 75px;
+    -fx-underline: true;
+}
+
+.cadre-joueurs {
+    -fx-background-color: #E9D3C0;
+}

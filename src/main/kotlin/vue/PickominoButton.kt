@@ -5,11 +5,18 @@ import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 
-class PickominoButton(val value : Int) : Button() {
+class PickominoButton(val value : Int, isOnStackTop : Boolean = false) : Button() {
+
+    var isSelected = false
     init {
-        val imageView = ImageView(Image("Pickominos/Pickomino_$value.png", 263.0, 518.0, true, false))
-        imageView.fitHeight = 147.5
-        imageView.fitWidth = 76.0
+        val imageView = ImageView(Image("images/pickominos/Pickomino_$value.png", 263.0, 518.0, true, false))
+        if (isOnStackTop) {
+            imageView.fitWidth = 40.0
+            imageView.fitHeight = 77.75
+        } else {
+            imageView.fitHeight = 147.5
+            imageView.fitWidth = 76.0
+        }
 
         graphic = imageView
 
