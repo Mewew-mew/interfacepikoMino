@@ -1,7 +1,5 @@
 package modele
 
-import iut.info1.pickomino.data.Pickomino
-
 class Joueur {
     private var valueStackTop = 0
     private var nombrePickomino = 0

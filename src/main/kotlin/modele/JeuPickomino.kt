@@ -43,14 +43,12 @@ class JeuPickomino {
     }
 
     @Deprecated("DEBUG")
-    fun choisirDes(listDices : List<DICE>): List<DICE> /*DEBUG*/ {
+    fun choisirDes(listDices : List<DICE>): List<DICE> {
         val joueurActuel = joueurActuel()
         val listeDesGardesBefore = listeDesGardes()
         val listeDesLances = connect.choiceDices(id, key, listDices)
         etatJeu = connect.gameState(id, key)
         val listeDesGardesAfter = listeDesGardes()
-        // On regarde si premièrement on est pas au début d'un tour
-        // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
         if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
             listeJoueurs[joueurActuel].retirerPickomino()
             listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])
@@ -58,23 +56,19 @@ class JeuPickomino {
         return listeDesLances
     }
 
-    fun garderDes(dice: DICE): Boolean {
+    fun garderDes(dice: DICE) {
         val joueurActuel = joueurActuel()
-        if (!connect.keepDices(id, key, dice))
-            return false
+        connect.keepDices(id, key, dice)
         etatJeu = connect.gameState(id, key)
-        if (listeDesGardes().isEmpty()) {
+        if (listeDesGardes().isEmpty())
             listeJoueurs[joueurActuel].retirerPickomino()
-        }
         etatJeu = connect.gameState(id, key)
-        return true
     }
 
-    fun prendrePickomino(pickomino: Int): Boolean {
+    fun prendrePickomino(pickomino: Int) {
         val joueurActuel = joueurActuel()
         val stackTopsBefore = sommetsPilesPickominoJoueurs()
-        if (!connect.takePickomino(id, key, pickomino))
-            return false
+        connect.takePickomino(id, key, pickomino)
         etatJeu = connect.gameState(id, key)
         for (joueur in stackTopsBefore.indices)
             if (joueur != joueurActuel && stackTopsBefore[joueur] != stackTopJoueur(joueur)) {
@@ -84,7 +78,6 @@ class JeuPickomino {
         listeJoueurs[joueurActuel].ajouterPickomino(pickomino)
         listeJoueurs[joueurActuel].updateStackTop(stackTopJoueur(joueurActuel))
         etatJeu = connect.gameState(id, key)
-        return true
     }
 
     private fun stackTopJoueur(joueur : Int) : Int {
