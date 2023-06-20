@@ -1,4 +1,7 @@
 
+import controleur.jeu.ControleurBoutonJoueurSuivant
+import controleur.jeu.ControleurBoutonLancer
+import controleur.jeu.ControleurBoutonValider
 import controleur.menu.ControleurBoutonJouer
 import io.ktor.client.network.sockets.*
 import iut.info1.pickomino.data.DICE
@@ -53,7 +56,9 @@ class Main : Application() {
         try {
             modele.init(nbJoueurs)
             vueJeu.init(nbJoueurs)
-            vueJeu.fixeControleurBoutons(this, stage, modele)
+            vueJeu.boutonLancer.onAction = ControleurBoutonLancer(this, stage, vueJeu, modele)
+            vueJeu.boutonValider.onAction = ControleurBoutonValider(this, stage, vueJeu, modele)
+            vueJeu.boutonJoueurSuivant.onAction = ControleurBoutonJoueurSuivant(vueJeu, modele)
 
             val spacingBinding = Bindings.createDoubleBinding(
                 {(stage.width-231*nbJoueurs) / (nbJoueurs-1)},

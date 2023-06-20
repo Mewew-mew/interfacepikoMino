@@ -12,7 +12,6 @@ import javafx.scene.control.Label
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.stage.Stage
-import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
 
@@ -142,12 +141,6 @@ class VueJeu : BorderPane() {
                 otherButton.padding = Insets(padding)
             }
         }
-    }
-
-    fun fixeControleurBoutons(appli: Main, stage: Stage, modele: JeuPickomino) {
-        boutonLancer.onAction = ControleurBoutonLancer(appli, stage, this, modele)
-        boutonValider.onAction = ControleurBoutonValider(appli, stage, this, modele)
-        boutonJoueurSuivant.onAction = ControleurBoutonJoueurSuivant(this, modele)
     }
 
     fun updateDesLances(listeDes : List<DICE>) {
