@@ -11,11 +11,9 @@ class ControleurBoutonJouer(
     private val vueMenu: VueMenu,
     private val stage: Stage
 ) : EventHandler<ActionEvent> {
-
-    private val nbJoueurs = vueMenu.getNbJoueurs()
     override fun handle(event: ActionEvent) {
         vueMenu.desactiverToutLesBoutons()
-        vueMenu.fadeTransition.setOnFinished{appli.lancerPartie(nbJoueurs, stage)}
+        vueMenu.fadeTransition.setOnFinished{appli.lancerPartie(vueMenu.getNbJoueurs(), stage)}
         vueMenu.transitionJouer()
     }
 }
