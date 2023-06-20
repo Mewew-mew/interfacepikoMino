@@ -11,11 +11,10 @@ import javafx.collections.FXCollections
 import kotlin.math.floor
 
 class JeuPickomino(nbJoueurs : Int) {
-    private val connect = Connector.factory("172.26.82.76", "8080", true)
-    private val id : Int
-    private val key : Int
+    private var connect = Connector.factory("172.26.82.76", "8080", true)
+    private var id : Int
+    private var key : Int
     val listeJoueurs = Array(nbJoueurs){i -> Joueur(i)}
-    val tourDuJoueur = 0
 
     init {
         val identification = connect.newGame(nbJoueurs)
@@ -34,6 +33,7 @@ class JeuPickomino(nbJoueurs : Int) {
             }
         */
     }
+
 
     fun lancerDes(): List<DICE> {
         return connect.rollDices(id, key)
