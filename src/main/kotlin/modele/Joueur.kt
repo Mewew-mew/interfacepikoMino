@@ -2,22 +2,26 @@ package modele
 
 class Joueur {
     private var valueStackTop = 0
-    private var nombrePickomino = 0
+    private val listePickomino = mutableListOf<Int>()
 
-    fun ajouterPickomino() {
-        nombrePickomino++
+    fun ajouterPickomino(pickomino: Int) {
+        listePickomino.add(pickomino)
     }
 
     fun retirerPickomino() {
-        if (nombrePickomino != 0)
-            nombrePickomino--
+        if (listePickomino.isNotEmpty())
+            listePickomino.removeLast()
     }
 
     fun getNombrePickomino() : Int {
-        return nombrePickomino
+        return listePickomino.size
     }
 
     fun updateStackTop(pickomino : Int) {
         valueStackTop = pickomino
+    }
+
+    fun donnePickoMax() : Int {
+        return listePickomino.maxOrNull() ?: 0
     }
 }

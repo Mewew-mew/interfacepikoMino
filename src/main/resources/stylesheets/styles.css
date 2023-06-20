@@ -25,13 +25,13 @@
 .texte-nbr-joueurs {
     -fx-font-size: 35px;
     -fx-text-fill: #FFFFFF;
-    -fx-stroke: #000000
+    -fx-stroke: black
 }
 
 .bouton-moins {
     -fx-background-color: #f53939;
     -fx-cursor: hand;
-    -fx-text-fill: #000000;
+    -fx-text-fill: black;
     -fx-font-size: 24px;
     -fx-text-decoration: none;
 }
@@ -43,7 +43,7 @@
 .bouton-plus {
     -fx-background-color: #2e82ff;
     -fx-cursor: hand;
-    -fx-text-fill: #000000;
+    -fx-text-fill: black;
     -fx-font-family: Arial;
     -fx-font-size: 24px;
     -fx-text-decoration: none;
@@ -77,7 +77,7 @@
     -fx-background-radius: 30px;
     -fx-border-radius:30px;
     -fx-border-width: 2px;
-    -fx-border-color: #000000;
+    -fx-border-color: black;
     -fx-cursor: hand;
     -fx-text-fill: #FFFFFF;
     -fx-font-size:17px;
@@ -94,7 +94,7 @@
         -fx-background-radius: 30px;
         -fx-border-radius:30px;
         -fx-border-width: 2px;
-        -fx-border-color: #000000;
+        -fx-border-color: black;
         -fx-cursor: hand;
         -fx-text-fill: #FFFFFF;
         -fx-font-size:17px;
@@ -111,7 +111,7 @@
     -fx-background-radius: 30px;
     -fx-border-radius:30px;
     -fx-border-width: 2px;
-    -fx-border-color: #000000;
+    -fx-border-color: black;
     -fx-cursor: hand;
     -fx-text-fill: #FFFFFF;
     -fx-font-size:17px;
@@ -121,6 +121,24 @@
 
 .bouton-joueur-suivant:hover {
     -fx-background-color: darkgoldenrod;
+}
+
+.bouton-resultats {
+    -fx-background-color: #f24537;
+    -fx-border-radius: 24px;
+        -fx-background-radius: 24px;
+    -fx-border-width: 3px;
+    -fx-border-color: #121212;
+    -fx-cursor: hand;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-padding: 32px 76px;
+}
+
+.bouton-resultats:hover {
+    -fx-background-color: #c62d1f;
 }
 
 .bouton:pressed {
@@ -145,14 +163,14 @@
 }
 
 .j4 {
-    -fx-text-fill: gold;
+    -fx-text-fill: goldenrod;
 }
 
 .bouton-rejouer {
     -fx-background-color: #79bbff;
     -fx-border-radius: 5px;
     -fx-border-width: 2px;
-    -fx-border-color: #000000;
+    -fx-border-color: black;
     -fx-text-fill: #ffffff;
     -fx-font-size: 17px;
     -fx-font-weight: bold;
@@ -167,7 +185,7 @@
     -fx-background-color: #cccc21;
     -fx-border-radius: 5px;
     -fx-border-width: 2px;
-    -fx-border-color: #000000;
+    -fx-border-color: black;
     -fx-text-fill: #ffffff;
     -fx-font-size: 17px;
     -fx-font-weight: bold;
@@ -178,9 +196,11 @@
     -fx-background-color: #abab1f;
 }
 
-
-
 .label-resultats {
     -fx-font-size: 75px;
     -fx-underline: true;
+}
+
+.cadre-joueurs {
+    -fx-background-color: #E9D3C0;
 }

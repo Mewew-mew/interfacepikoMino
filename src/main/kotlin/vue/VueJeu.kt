@@ -14,7 +14,6 @@ import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import javafx.scene.paint.Color
 import javafx.stage.Stage
-import modele.JeuPickomino
 
 class VueJeu : BorderPane() {
 
@@ -45,7 +44,7 @@ class VueJeu : BorderPane() {
     private val desLances = HBox()
     val boutonValider = Button("Valider").also{it.styleClass.addAll("bouton","bouton-valider")}
     val boutonJoueurSuivant = Button("Joueur suivant").also{it.styleClass.addAll("bouton","bouton-joueur-suivant")}
-    private val boutonResultats = Button("Résultats finaux")
+    private val boutonResultats = Button("Résultats finaux").also{it.styleClass.addAll("bouton", "bouton-resultats")}
     private val cadreDes = HBox(desGardes, desLances)
     val cadreBoutons = HBox(boutonLancer, boutonValider)
     private val cadreCentre = BorderPane()
@@ -69,14 +68,12 @@ class VueJeu : BorderPane() {
         listeBoutonPickoSommetPile = Array(nbJoueurs){PickominoButton(0)}
         boutonValider.isDisable = true
 
-        cadreCentre.top = VBox(cadrePickominos).also{
-            it.alignment = Pos.CENTER
-            setMargin(it, Insets(50.0, 0.0, 0.0,0.0))
-        }
+        cadreCentre.top = VBox(cadrePickominos).also{it.alignment = Pos.CENTER}
         cadreCentre.center = cadreDes
         cadreCentre.bottom = cadreBoutons
 
         cadreBoutons.spacing = 15.0
+        setMargin(cadreBoutons, Insets(0.0, 0.0, 25.0, 0.0))
 
         desGardes.padding = Insets(15.0)
         desLances.padding = Insets(15.0)
@@ -105,15 +102,15 @@ class VueJeu : BorderPane() {
             listeLabelJoueurs[i].styleClass.addAll("itim","j${i+1}")
             listeJoueurs[i].children.addAll(listeInfoJoueurs[i], listeBoutonPickoSommetPile[i])
             listeJoueurs[i].alignment = Pos.CENTER
-            listeJoueurs[i].spacing = 10.0
-            listeJoueurs[i].padding = Insets(10.0)
+            listeJoueurs[i].spacing = 30.0
+            listeJoueurs[i].padding = Insets(15.0)
             listeJoueurs[i].border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(2.0)))
             cadreJoueurs.children.add(listeJoueurs[i])
         }
 
-        setMargin(cadreJoueurs, Insets(15.0))
-
         cadreJoueurs.alignment = Pos.CENTER
+        cadreJoueurs.padding = Insets(15.0)
+        cadreJoueurs.styleClass.add("cadre-joueurs")
 
         style = "-fx-background-color: #FAEBD7;"
         top = BorderPane(
@@ -173,12 +170,6 @@ class VueJeu : BorderPane() {
                 otherButton.padding = Insets(padding)
             }
         }
-    }
-
-    fun fixeControleurBoutons(appli: Main, stage: Stage, modele: JeuPickomino) {
-        boutonLancer.onAction = ControleurBoutonLancer(appli, stage, this, modele)
-        boutonValider.onAction = ControleurBoutonValider(appli, stage, this, modele)
-        boutonJoueurSuivant.onAction = ControleurBoutonJoueurSuivant(this, modele)
     }
 
     fun updateDesLances(listeDes : List<DICE>) {
@@ -266,22 +257,24 @@ class VueJeu : BorderPane() {
         return if (i != -1) listePickomino[i].value else 0
     }
 
-    fun declencherFinPartie(appli: Main, stage: Stage, modele: JeuPickomino) {
+    fun declencherFinPartie(appli: Main, stage: Stage, scoreFinaux : List<Int>, listePickoMax : List<Int>) {
+        boutonLancer.isDisable = true
+        boutonValider.isDisable = true
         cadreTourJoueur.children.setAll(Label("C'est la fin de la partie !").also{it.style = "-fx-font-size: 55px;"; it.styleClass.add("handrawn")})
         labelInformation.text = ""
-        center = boutonResultats
+        cadreCentre.center = boutonResultats
         boutonResultats.setOnAction {
             val vueFin = VueFin(listeBoutonPickoSommetPile.size)
             vueFin.boutonMenu.setOnAction{appli.relancerMenu(stage)}
             vueFin.boutonRejouer.setOnAction{appli.resetPartie(); appli.lancerPartie(listeJoueurs.size, stage); appli.activerModeDebug()}
-            vueFin.init(modele.obtenirScoreFinal())
+            vueFin.init(scoreFinaux, listePickoMax)
             val sceneFin = Scene(vueFin)
             sceneFin.stylesheets.add("stylesheets/styles.css")
             stage.close()
-            stage.width = 1600.0
-            stage.height = 900.0
             stage.minWidth = 1280.0
             stage.minHeight = 940.0
+            stage.width = 1600.0
+            stage.height = 900.0
             stage.scene = sceneFin
             stage.show()
         }
@@ -317,5 +310,10 @@ class VueJeu : BorderPane() {
             sonPickoPris.stop()
             sonPickoPris.play()
         }
+    }
+
+    fun couperTouteLesMusiques() {
+        for (musique in listeMusiques)
+            musique.stop()
     }
 }

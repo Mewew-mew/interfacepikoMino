@@ -1,6 +1,7 @@
 package controleur.jeu
 
 import Main
+import iut.info1.pickomino.data.DICE
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.stage.Stage
@@ -24,13 +25,7 @@ class ControleurBoutonLancer(
         }
 
         //val listeDesLances = modele.lancerDes()
-
-        // DEBUG
-        val debug = vueJeu.listeDesLances.map{it.type}
-        val listeDesLances = if (debug.isNotEmpty())
-            modele.choisirDes(debug)
-        else modele.lancerDes()
-        //-----------------
+        val listeDesLances = choisirDes()
 
         vueJeu.updateDesLances(listeDesLances)
         vueJeu.boutonLancer.isDisable = true
@@ -41,12 +36,21 @@ class ControleurBoutonLancer(
             vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
             // Si il ne reste plus de Pickomino
             if (vueJeu.listeBoutonPickoAccess.isEmpty())
-                vueJeu.declencherFinPartie(appli, stage, modele)
+                vueJeu.declencherFinPartie(appli, stage, modele.obtenirScoreFinal(), modele.donnePickoMaxJoueurs())
             else {
                 vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
+                vueJeu.boutonValider.isDisable = true
                 vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
             }
         } else vueJeu.labelInformation.text = "Vous pouvez choisir un type de dé à garder !"
         vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+    }
+
+    @Deprecated("DEBUG")
+    fun choisirDes(): List<DICE> {
+        val debug = vueJeu.listeDesLances.map{it.type}
+        return if (debug.isNotEmpty())
+            modele.choisirDes(debug)
+        else modele.lancerDes()
     }
 }
