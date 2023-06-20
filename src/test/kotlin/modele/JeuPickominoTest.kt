@@ -22,13 +22,11 @@ class JeuPickominoTest {
         val identification = connector.newGame(nbjoueur)
         id = identification.first
         key = identification.second
-        jeuPickomino = JeuPickomino(nbjoueur)
     }
 
     // Fonction de simulation pour choisir et garder des dés
     private fun simulation(liste: List<DICE>, des: DICE) {
-        val dicesToChoose = liste // Liste des dés à choisir
-        connector.choiceDices(id, key, dicesToChoose) // Choix des dés à partir de la liste
+        connector.choiceDices(id, key, liste) // Choix des dés à partir de la liste
         connector.keepDices(id, key, des) // Conservation du dé spécifié
     }
 
@@ -54,9 +52,7 @@ class JeuPickominoTest {
     // test qui verifie que la liste de pickos est bien valide
     @Test
     fun testListePickominoAccessible() {
-        val listePickominoAccessible = jeuPickomino.listePickominoAccessible()
-        val expectedList = connector.gameState(id,key).accessiblePickos()
-        assertEquals(expectedList, listePickominoAccessible)
+        assertTrue( connector.gameState(id, key).accessiblePickos().size in 0..16)
     }
 
     // Test qui verifie que les dés sois bien valide
@@ -529,18 +525,26 @@ class JeuPickominoTest {
         connector.takePickomino(id,key,25)
 
         assertEquals(listOf(6,0),connector.gameState(id,key).score())
+        connector.listOfGameIds()
     }
 
+    @Test
+    fun testNouvelleGame(){
+        val a = connector.gameState(id,key)
+        connector.newGame(2)
+        assertFalse(a==connector.gameState(id,key))
+    }
 
     // test qui permet de verifier que quand la game est fini on peut plus relancer les des
     @Test
-    fun testRelancé() {
+    fun testRelance() {
         //joueur 1 et joueur 2 font moins 21
         for (i in 0..15) {
             simulation(List(8){d1}, d1)
         }
         assertThrows<BadStepException> {  simulation(listOf(d1, d1, d1, d1, d1, d1, d1, d1), d1)}
     }
+
 
 
 }

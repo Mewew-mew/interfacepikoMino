@@ -4,6 +4,7 @@ import controleur.jeu.ControleurBoutonLancer
 import controleur.jeu.ControleurBoutonValider
 import controleur.menu.ControleurBoutonJouer
 import io.ktor.client.network.sockets.*
+import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.STATUS
 import javafx.application.Application
@@ -139,5 +140,6 @@ class Main : Application() {
     }
 }
 fun main() {
+    val connector = Connector.factory("172.26.82.76", "8080", true)
     Application.launch(Main::class.java)
 }
