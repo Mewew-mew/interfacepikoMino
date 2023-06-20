@@ -49,6 +49,7 @@ class Main : Application() {
     fun relancerMenu(stage: Stage) {
         vueMenu = VueMenu()
         resetPartie()
+        vueMenu.redemarrerMusique()
         start(stage)
     }
 
@@ -100,6 +101,7 @@ class Main : Application() {
     }
 
     fun resetPartie() {
+        vueJeu.couperTouteLesMusiques()
         vueJeu = VueJeu()
         modele = JeuPickomino()
     }

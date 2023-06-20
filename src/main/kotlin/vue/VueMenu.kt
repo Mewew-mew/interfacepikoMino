@@ -82,6 +82,11 @@ class VueMenu : VBox() {
         musiqueMenu.play()
     }
 
+    fun redemarrerMusique() {
+        musiqueMenu.stop()
+        musiqueMenu.play()
+    }
+
     fun desactiverToutLesBoutons() {
         when {
             !boutonMoins.isDisable -> {

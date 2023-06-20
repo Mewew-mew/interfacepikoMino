@@ -311,4 +311,9 @@ class VueJeu : BorderPane() {
             sonPickoPris.play()
         }
     }
+
+    fun couperTouteLesMusiques() {
+        for (musique in listeMusiques)
+            musique.stop()
+    }
 }
