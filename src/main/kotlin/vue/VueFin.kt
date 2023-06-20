@@ -29,7 +29,7 @@ class VueFin(private val nbJoueurs : Int) : BorderPane() {
     fun init(scoreFinaux : List<Int>, listePickoMax : List<Int>) {
         val listeJoueurs = Array(nbJoueurs){i -> i}
 
-        val podium = listeJoueurs.sortedWith(compareByDescending<Int>{listePickoMax[it]}.thenByDescending{scoreFinaux[it]})
+        val podium = listeJoueurs.sortedWith(compareByDescending<Int>{scoreFinaux[it]}.thenByDescending{listePickoMax[it]})
 
         val cadreCentre = HBox().also{it.spacing = 50.0; it.alignment = Pos.CENTER}
         val listeCouleursPodium = listOf("goldenrod", "silver", "#CD7F32", "gray")
