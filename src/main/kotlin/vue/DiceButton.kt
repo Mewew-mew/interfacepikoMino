@@ -7,10 +7,7 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 
 
-class DiceButton(
-    val type: DICE,
-    var crossed: Boolean = false
-) : Button() {
+class DiceButton(val type: DICE, var crossed: Boolean = false) : Button() {
 
     var isSelected = false
 
