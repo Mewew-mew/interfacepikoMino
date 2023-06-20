@@ -44,6 +44,7 @@ class ControleurBoutonLancer(
                 vueJeu.declencherFinPartie(appli, stage, modele)
             else {
                 vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
+                vueJeu.boutonValider.isDisable = true
                 vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
             }
         } else vueJeu.labelInformation.text = "Vous pouvez choisir un type de dé à garder !"

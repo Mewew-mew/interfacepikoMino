@@ -32,6 +32,7 @@ class Main : Application() {
         activerModeDebug() // DEBUG
 
         stage.icons.add(Image("images/icon.png"))
+        stage.isMaximized = false
         stage.minWidth = 670.0
         stage.minHeight = 670.0
         stage.width = 670.0
@@ -107,6 +108,8 @@ class Main : Application() {
                         modele.garderDes(DICE.d1)
                     }
                     vueJeu.updatePickominos(modele.listePickominoAccessible())
+                    vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+                    vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
                 }
                 if (it.code in listOf(NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5, NUMPAD6)) {
                     if (vueJeu.listeDesLances.size < 8 - vueJeu.listeDesGardes.size) {

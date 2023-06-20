@@ -278,10 +278,10 @@ class VueJeu : BorderPane() {
             val sceneFin = Scene(vueFin)
             sceneFin.stylesheets.add("stylesheets/styles.css")
             stage.close()
-            stage.width = 1600.0
-            stage.height = 900.0
             stage.minWidth = 1280.0
             stage.minHeight = 940.0
+            stage.width = 1600.0
+            stage.height = 900.0
             stage.scene = sceneFin
             stage.show()
         }
