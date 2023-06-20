@@ -54,7 +54,7 @@ class ControleurBoutonValider(
                 if (!ilYaUnVers || !vueJeu.activerPickomino(sommeDesGardes, joueurActuel)) {
                     // Si il ne reste plus de Pickomino
                     if (vueJeu.listeBoutonPickoAccess.isEmpty())
-                        vueJeu.declencherFinPartie(appli, stage, modele)
+                        vueJeu.declencherFinPartie(appli, stage, modele.obtenirScoreFinal(), modele.donnePickoMaxJoueurs())
                     else {
                         vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
                         vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
@@ -83,7 +83,7 @@ class ControleurBoutonValider(
             vueJeu.updateCadreInformation(modele.joueurActuel())
             // Si il ne reste plus de Pickomino
             if (vueJeu.listeBoutonPickoAccess.isEmpty())
-                vueJeu.declencherFinPartie(appli, stage, modele)
+                vueJeu.declencherFinPartie(appli, stage, modele.obtenirScoreFinal(), modele.donnePickoMaxJoueurs())
         }
     }
 }

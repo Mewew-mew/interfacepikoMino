@@ -3,14 +3,20 @@ package modele
 import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.Game
+import iut.info1.pickomino.data.STATUS
 
 class JeuPickomino {
-    val debug = true
+    @Deprecated("DEBUG") val debug = true
     private lateinit var connect : Connector
     private lateinit var etatJeu : Game
     private var id = 0
     private var key = 0
     private lateinit var listeJoueurs : Array<Joueur>
+
+    @Deprecated("DEBUG")
+    fun donneStatus() : STATUS { // DEBUG
+        return etatJeu.current.status
+    }
 
     fun init(nbJoueurs : Int) {
         connect = Connector.factory("172.26.82.76", "8080", debug)
@@ -36,6 +42,7 @@ class JeuPickomino {
         return listeDesLances
     }
 
+    @Deprecated("DEBUG")
     fun choisirDes(listDices : List<DICE>): List<DICE> /*DEBUG*/ {
         val joueurActuel = joueurActuel()
         val listeDesGardesBefore = listeDesGardes()
@@ -74,7 +81,7 @@ class JeuPickomino {
                 listeJoueurs[joueur].retirerPickomino()
                 break
             }
-        listeJoueurs[joueurActuel].ajouterPickomino()
+        listeJoueurs[joueurActuel].ajouterPickomino(pickomino)
         listeJoueurs[joueurActuel].updateStackTop(stackTopJoueur(joueurActuel))
         etatJeu = connect.gameState(id, key)
         return true
@@ -110,6 +117,10 @@ class JeuPickomino {
 
     fun sommetsPilesPickominoJoueurs(): List<Int> {
         return etatJeu.pickosStackTops()
+    }
+
+    fun donnePickoMaxJoueurs() : List<Int> {
+        return listeJoueurs.map{it.donnePickoMax()}
     }
 
     fun sommeDes(dices : List<DICE>) : Int {

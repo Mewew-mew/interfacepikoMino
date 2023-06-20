@@ -2,6 +2,7 @@
 import controleur.menu.ControleurBoutonJouer
 import io.ktor.client.network.sockets.*
 import iut.info1.pickomino.data.DICE
+import iut.info1.pickomino.data.STATUS
 import javafx.application.Application
 import javafx.beans.binding.Bindings
 import javafx.scene.Scene
@@ -23,14 +24,13 @@ class Main : Application() {
     private var vueJeu = VueJeu()
     private var modele = JeuPickomino()
 
-
     override fun start(stage: Stage) {
         stage.close()
         val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
         sceneMenu.stylesheets.add("stylesheets/styles.css")
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueMenu, stage)
-        activerModeDebug() // DEBUG
 
+        activerModeDebug() // DEBUG
         stage.icons.add(Image("images/icon.png"))
         stage.isMaximized = false
         stage.minWidth = 670.0
@@ -56,7 +56,7 @@ class Main : Application() {
             vueJeu.fixeControleurBoutons(this, stage, modele)
 
             val spacingBinding = Bindings.createDoubleBinding(
-                {(stage.width-201*nbJoueurs) / (nbJoueurs-1)},
+                {(stage.width-231*nbJoueurs) / (nbJoueurs-1)},
                 stage.widthProperty()
             )
 
@@ -73,7 +73,7 @@ class Main : Application() {
             stage.close()
             stage.width = 1600.0
             stage.height = 900.0
-            stage.minWidth = 920.0
+            stage.minWidth = 960.0
             stage.minHeight = 940.0
             stage.show()
         } catch (e: HttpTimeoutException) {
@@ -98,10 +98,11 @@ class Main : Application() {
         modele = JeuPickomino()
     }
 
+    @Deprecated("DEBUG")
     fun activerModeDebug() {
         if (modele.debug) // DEBUG
             vueJeu.setOnKeyPressed {
-                if (it.code == NUMPAD0) {
+                if (it.code == NUMPAD0 && modele.donneStatus() != STATUS.KEEP_DICE) {
                     for (i in 0 until vueJeu.listeBoutonPickoAccess.size-1) {
                         modele.choisirDes(listOf(DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1))
                         modele.garderDes(DICE.d1)
