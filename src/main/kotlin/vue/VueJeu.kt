@@ -18,13 +18,17 @@ import javafx.stage.Stage
 class VueJeu : BorderPane() {
 
     private val listeMusiques = listOf(
-        createMediaPlayer("/sounds/musics/theme1.mp3")
+        //createMediaPlayer("/sounds/musics/theme5.mp3").also{it.volume = 0.6}
+        createMediaPlayer("/sounds/musics/theme1.mp3"),
+        createMediaPlayer("/sounds/musics/theme2.mp3"),
+        createMediaPlayer("/sounds/musics/theme3.mp3"),
+        createMediaPlayer("/sounds/musics/theme4.mp3")
     ).shuffled()
 
-    private val sonDes = createMediaPlayer("/sounds/effects/dice_rolling.mp3").also{it.volume = 0.5}
-    private val sonSelectionne = createMediaPlayer("/sounds/effects/selected.mp3").also{it.volume = 0.5}
-    private val sonDeselectionne = createMediaPlayer("/sounds/effects/unselected.mp3").also{it.volume = 0.5}
-    private val sonPickoPris = createMediaPlayer("/sounds/effects/take_pickomino.mp3").also{it.volume = 0.8}
+    private val sonDes = createMediaPlayer("/sounds/effects/dice_rolling.mp3").also{it.volume = 0.5; it.setOnEndOfMedia{it.stop()}}
+    private val sonSelectionne = createMediaPlayer("/sounds/effects/selected.mp3").also{it.volume = 0.5; it.setOnEndOfMedia{it.stop()}}
+    private val sonDeselectionne = createMediaPlayer("/sounds/effects/unselected.mp3").also{it.volume = 0.5; it.setOnEndOfMedia{it.stop()}}
+    private val sonPickoPris = createMediaPlayer("/sounds/effects/take_pickomino.mp3").also{it.volume = 0.8; it.setOnEndOfMedia{it.stop()}}
 
     private val boutonEffets = EffectsButton()
     private val boutonMusique = MusicButton(listeMusiques)
@@ -124,7 +128,7 @@ class VueJeu : BorderPane() {
         bottom = cadreJoueurs
 
         listeMusiques.forEachIndexed{index, mediaPlayer ->
-            mediaPlayer.volume = 0.35
+            mediaPlayer.volume = 0.5
             mediaPlayer.setOnEndOfMedia {
                 mediaPlayer.stop()
                 listeMusiques[(index + 1) % listeMusiques.size].play()
