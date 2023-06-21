@@ -77,10 +77,11 @@ class Main : Application() {
             vueJeu.updatePickominos(modele.listePickominoAccessible())
 
             stage.close()
-            stage.width = 1600.0
-            stage.height = 900.0
             stage.minWidth = 960.0
             stage.minHeight = 940.0
+            stage.width = 1600.0
+            stage.height = 940.0
+
             stage.show()
         } catch (e: HttpTimeoutException) {
             afficherAlert()
