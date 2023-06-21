@@ -6,6 +6,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.TitledPane
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import javafx.scene.input.KeyCode
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
@@ -26,6 +27,8 @@ class VueRegles : TitledPane() {
     val musiqueRegle = MediaPlayer(Media(javaClass.getResource("/sounds/musics/rules_theme.mp3")?.toExternalForm()))
 
     init {
+        musiqueRegle.cycleCount = MediaPlayer.INDEFINITE
+
         boutonPrecedent.setOnAction{
             boutonSuivant.isDisable = false
             reglePrecedente()
@@ -76,9 +79,17 @@ class VueRegles : TitledPane() {
 
         padding = Insets(0.0)
         content = StackPane(Rectangle(668.0, 739.0, Color.WHITE), cadreRegle)
+
+        setOnKeyPressed{
+            if (it.code == KeyCode.LEFT && reglesActuel != 0)
+                reglePrecedente()
+            if (it.code == KeyCode.RIGHT && reglesActuel != 7)
+                regleSuivante()
+        }
     }
 
     private fun reglePrecedente() {
+        boutonSuivant.isDisable = false
         reglesActuel--
         cadreRegle.center = listeRegles[reglesActuel]
         text = "${reglesActuel+1} -"
@@ -87,6 +98,7 @@ class VueRegles : TitledPane() {
     }
 
     private fun regleSuivante() {
+        boutonPrecedent.isDisable = false
         reglesActuel++
         text = "${reglesActuel+1} -"
         cadreRegle.center = listeRegles[reglesActuel]

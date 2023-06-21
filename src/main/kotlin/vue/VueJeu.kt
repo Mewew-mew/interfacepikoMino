@@ -18,19 +18,18 @@ import javafx.stage.Stage
 class VueJeu : BorderPane() {
 
     // CHILL MODE
-    /*
     private val listeMusiques = mutableListOf(
         createMediaPlayer("/sounds/musics/theme1.mp3"),
         createMediaPlayer("/sounds/musics/theme2.mp3"),
         createMediaPlayer("/sounds/musics/theme3.mp3"),
         createMediaPlayer("/sounds/musics/theme4.mp3")
-    ).shuffled()*/
+    ).shuffled()
 
     // EPIC MODE
-    private val listeMusiques = mutableListOf(
-        createMediaPlayer("/sounds/musics/theme1_epic.mp3").also{it.volume = 0.6},
+    /*private val listeMusiques = mutableListOf(
+        createMediaPlayer("/sounds/musics/theme1_epic.mp3"),
         createMediaPlayer("/sounds/musics/theme2_epic.mp3").also{it.volume = 0.1}
-    ).shuffled()
+    ).shuffled()*/
 
     private val sonDes = createMediaPlayer("/sounds/effects/dice_rolling.mp3").also{it.volume = 0.5; it.setOnEndOfMedia{it.stop()}}
     private val sonSelectionne = createMediaPlayer("/sounds/effects/selected.mp3").also{it.volume = 0.5; it.setOnEndOfMedia{it.stop()}}
