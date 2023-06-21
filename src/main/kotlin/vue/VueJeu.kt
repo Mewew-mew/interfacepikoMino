@@ -17,7 +17,7 @@ import javafx.stage.Stage
 
 class VueJeu : BorderPane() {
 
-    private val listeMusiques = listOf(
+    private val listeMusiques = mutableListOf(
         //createMediaPlayer("/sounds/musics/theme5.mp3").also{it.volume = 0.6}
         createMediaPlayer("/sounds/musics/theme1.mp3"),
         createMediaPlayer("/sounds/musics/theme2.mp3"),

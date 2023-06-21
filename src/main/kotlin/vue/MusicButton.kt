@@ -22,7 +22,7 @@ class MusicButton(private val listeMusiques : List<MediaPlayer>) : SoundsButton(
         if (isActive) {
             graphic = musicOn
             for (musique in listeMusiques)
-                musique.volume = 0.35
+                musique.volume = 0.5
         } else {
             graphic = musicOff
             for (musique in listeMusiques)
