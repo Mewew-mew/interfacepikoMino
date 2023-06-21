@@ -4,6 +4,7 @@ import controleur.jeu.ControleurBoutonLancer
 import controleur.jeu.ControleurBoutonValider
 import controleur.menu.ControleurBoutonJouer
 import io.ktor.client.network.sockets.*
+import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.STATUS
 import javafx.application.Application
@@ -77,10 +78,11 @@ class Main : Application() {
             vueJeu.updatePickominos(modele.listePickominoAccessible())
 
             stage.close()
-            stage.width = 1600.0
-            stage.height = 900.0
             stage.minWidth = 960.0
             stage.minHeight = 940.0
+            stage.width = 1600.0
+            stage.height = 940.0
+
             stage.show()
         } catch (e: HttpTimeoutException) {
             afficherAlert()
@@ -142,5 +144,6 @@ class Main : Application() {
     }
 }
 fun main() {
+    val connector = Connector.factory("172.26.82.76", "8080", true)
     Application.launch(Main::class.java)
 }
