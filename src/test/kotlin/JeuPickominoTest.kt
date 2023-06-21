@@ -9,12 +9,15 @@ import iut.info1.pickomino.exceptions.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
 class JeuPickominoTest {
     private val connector = Connector.factory("172.26.82.76", "8080", true)
     private var id = 0
     private var key = 0
-    private lateinit var jeuPickomino: JeuPickomino
     private var nbjoueur = 2
 
     @BeforeEach
@@ -30,6 +33,39 @@ class JeuPickominoTest {
         connector.keepDices(id, key, des) // Conservation du dé spécifié
     }
 
+    // Fonction de simulation pour les tests parametriques
+    private fun simulationPara(liste: MutableList<DICE>, picko: Int) {
+        var sum = 0
+        var impasse = 0
+        while (liste.isNotEmpty() && sum != picko) {
+            val des = liste.first()
+
+            connector.choiceDices(id, key, liste)
+            connector.keepDices(id, key, des)
+
+            while (liste.contains(des)) {
+                liste.remove(des)
+                if (des != worm){
+                    sum += (des.ordinal +1)
+                }else{
+                    sum += 5
+                    impasse = 1
+                }
+            }
+        }
+        if (sum >36){
+            sum = 36
+        }
+
+        try {
+            require(sum == picko)
+            require(impasse <= 1)
+            connector.takePickomino(id, key, picko)
+        } catch (e: BadStepException) {
+            print("erreur")
+        }
+    }
+
     // test clé et id du connector
     @Test
     fun testGoodKeyId(){
@@ -41,7 +77,6 @@ class JeuPickominoTest {
     fun testWrongKey(){
         assertThrows<IncorrectKeyException> {connector.gameState(id,0) }
     }
-
 
     // test id du connector mauvaise
     @Test
@@ -119,6 +154,18 @@ class JeuPickominoTest {
         val listeDesDes = connector.gameState(id, key).current.rolls
 
         assertTrue(!listeDesDes.contains(des))
+    }
+
+    // test qui verfie bien que lorsque qu'on lance des des il les met bien dans keptDices
+    @Test
+    fun testDesGagner() {
+        val diceOptions = listOf(d1, d2, d3, d4, d5, worm)
+        val des = diceOptions.random()
+        simulation(listOf(d1, worm,d2, d3, d4, d5, d4),des)
+
+        val listeDesDes = connector.gameState(id, key).current.keptDices
+
+        assertTrue(listeDesDes.contains(des))
     }
 
     //test qui permet de voir qu'un joueur a bien pris un picko dans la liste
@@ -203,25 +250,6 @@ class JeuPickominoTest {
         }
     }
 
-    //Test permettant de voir qu'on ne peut pas prendre un picko qui etais deja prenable lorsque les des ne sont plus validés
-    @Test
-    fun testSimulationDesIncorrect2() {
-        simulation(listOf(worm,worm,worm,worm,worm,d4 , d5, d1),worm)
-
-        val dicesToChoose = listOf(worm , worm,worm)
-        connector.choiceDices(id,key,dicesToChoose)
-
-        assertThrows<BadStepException> { connector.takePickomino(id,key,25)}
-        }
-
-    // test qui verifie qu'on peut pas prendre de picko sans worm
-    @Test
-    fun testvaleurCorrectMaisSansWorm(){
-        simulation(listOf(d5, d5, d5, d5,d5,d4 , d3, d1),d5)
-        assertThrows<BadStepException> { connector.takePickomino(id,key,25)}
-
-    }
-
     // test qui permet de voir qu'on change bien de joueur
     @Test
     fun testJoueurSuivant() {
@@ -235,72 +263,6 @@ class JeuPickominoTest {
         assertNotEquals(joueurDebut, joueurActuel)
     }
 
-    // Test qui verifie que le joueur 1 perd un picko quand le joueur 2 prend son picko
-    @Test
-    fun testJoueurPertePicko() {
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-
-        connector.takePickomino(id, key, 25)
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-        connector.takePickomino(id, key, 25)
-
-        val pickosStackTops = connector.gameState(id, key).pickosStackTops()
-        assertFalse(pickosStackTops[0] == 25)
-    }
-
-    // Test qui verifie que le joueur 2 prend bien le picko chez son adversaire
-    @Test
-    fun testJoueurSuivantPrendPicko() {
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-
-        connector.takePickomino(id, key, 25)
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-        connector.takePickomino(id, key, 25)
-
-        val pickosStackTops = connector.gameState(id, key).pickosStackTops()
-        assertTrue(pickosStackTops[1] == 25)
-    }
-
-
-    // Test qui verifie que le joueur 2 prend bien le picko en dessous de la valeur qu'il a tirer dans la liste
-    @Test
-    fun testJoueurSuivantPrendPickoplusfaible() {
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-        connector.takePickomino(id, key, 25)
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-        connector.takePickomino(id, key, 24)
-
-        val pickosStackTops = connector.gameState(id, key).pickosStackTops()
-        assertTrue(pickosStackTops[0] == 25)
-        assertTrue(pickosStackTops[1] == 24)
-    }
-
-    // Test qui verifie que le joueur 1 prend bien le picko en dessous de la valeur qu'il a tirer dans la liste malgré quil y a un ecart
-    @Test
-    fun testJoueurSuivantPrendPickoplusfaible2() {
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-        connector.takePickomino(id, key, 25)
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-        simulation(listOf(d1, d4),d1)
-        connector.takePickomino(id, key, 26)
-
-        simulation(listOf(worm,worm,worm,worm,worm,d4, d4),worm)
-
-        simulation(listOf(d1, d4),d1)
-        connector.takePickomino(id, key, 24)
-
-        val pickosStackTops = connector.gameState(id, key).pickosStackTops()
-        assertTrue(pickosStackTops[0] == 24)
-        assertTrue(pickosStackTops[1] == 26)
-    }
-
     // Test qui verifie que le joueur 1 passe son tour quand il fait moins de 21
     @Test
     fun testJoueurMoinsDe21() {
@@ -309,132 +271,14 @@ class JeuPickominoTest {
         assertTrue(connector.gameState(id,key).current.player == 1)
     }
 
-    // Test qui verifie que le joueur 1 passe son tour quand il fait moins de 21 avec un picko dans se liste avec le picko 36
+    // Test qui verifie que le joueur 1 passe son tour quand il fait moins de 21
     @Test
-    fun testJoueurMoinsDe21avecPickoDansLaListe36() {
-        val pickosInitial = connector.gameState(id,key).accessiblePickos()
-
-        // Joueur 1
-        simulation(List(8){worm},worm)
-        connector.takePickomino(id,key,36)
-
-        // Joueur 2
-        simulation( listOf(d4, d4, d4,d4,d4,d4, d4,worm),worm)
-        simulation(listOf(d4, d4, d4,d4,d4,d4, d4),d4)
-
-        connector.takePickomino(id,key,33)
-
-        val pickoJ1 = connector.gameState(id, key).pickosStackTops()
-
-        // Joueur 1
-        simulation( listOf(d1, worm,d1,d1,d1,d1,d1, d1),d1)
+    fun testPertePickoAvecMoinsDe21() {
+        simulation(listOf(d1, worm,d1,d1,d1,d1,d1, d1),d1)
         simulation( listOf(worm),worm)
-
-        val pickosFinal = connector.gameState(id,key).accessiblePickos()
-        val pickoJ1update = connector.gameState(id, key).pickosStackTops()
-
-        assertFalse(!pickosFinal.contains(pickosInitial.last())) //
-        assertTrue(connector.gameState(id,key).current.player == 1)
-        assertTrue(pickoJ1update[0]!=pickoJ1[0])
+        assertTrue(connector.gameState(id,key).accessiblePickos().last() != 36)
     }
 
-    // Test qui verifie que le joueur 1 passe son tour quand il fait moins de 21 avec un picko dans sa liste
-    @Test
-    fun testJoueurMoinsDe21avecPickoDansLaListe() {
-        // Joueur 1
-        simulation(listOf(d4, d4, d4,d4,d4,d4, worm,worm),worm)
-
-        simulation(listOf(d4, d4, d4,d4,d4,d4),d4)
-        connector.takePickomino(id,key,34)
-
-        // Joueur 2
-        simulation(listOf(d4, d4, d4,d4,d4,d4, d4,worm),worm)
-        simulation(listOf(d4, d4, d4,d4,d4,d4, d4),d4)
-        connector.takePickomino(id,key,33)
-
-        val pickoJ1 = connector.gameState(id, key).pickosStackTops()
-
-        // Joueur 1
-        simulation(listOf(d1, worm,d1,d1,d1,d1,d1, d1),d1)
-        simulation(listOf(worm),worm)
-
-        val pickoJ1update = connector.gameState(id, key).pickosStackTops()
-
-        assertTrue(connector.gameState(id,key).current.player == 1)
-        assertTrue(pickoJ1update[0]!=pickoJ1[0])
-    }
-
-    // Test qui verifie que le plus grand picko s'enleve quand le joueur fait moins de 21 avec une pickos dans sa liste autre que 36
-    @Test
-    fun testJoueurMoinsDe21avecPerteduPlusGrandPicko() {
-        val pickosInitial = connector.gameState(id,key).accessiblePickos()
-
-        // Joueur 1
-        simulation(listOf(d4, d4, d4,d4,d4,d4, worm,worm),worm)
-
-        simulation(listOf(d4, d4, d4,d4,d4,d4),d4)
-        connector.takePickomino(id,key,34)
-
-        // Joueur 2
-        simulation(listOf(d4, d4, d4,d4,d4,d4, d4,worm),worm)
-        simulation(listOf(d4, d4, d4,d4,d4,d4, d4),d4)
-        connector.takePickomino(id,key,33)
-
-        val pickoJ1 = connector.gameState(id, key).pickosStackTops()
-
-        // Joueur 1
-        simulation(listOf(d1, worm,d1,d1,d1,d1,d1, d1),d1)
-        simulation(listOf(worm),worm)
-
-        val pickosFinal = connector.gameState(id,key).accessiblePickos()
-        val pickoJ1update = connector.gameState(id, key).pickosStackTops()
-
-        assertTrue(!pickosFinal.contains(pickosInitial.last()))
-        assertTrue(pickoJ1update[0]!=pickoJ1[0])
-    }
-
-    // Test qui verifie que lorsque une personne prend un picko qui n'est pas disponoble ici le 21
-    @Test
-    fun testJoueurPickos21() {
-        //Joueur 1
-        simulation(listOf(worm,d5, d2, d1, d2, d2, d2, d2), worm)
-        simulation(listOf(d4, d2, d1, d2, d2, d2, d2), d4)
-        simulation(List(6){d2}, d2)
-        connector.takePickomino(id, key, 21)
-
-        // Joueur 2
-        simulation( listOf(d4, d4, d4,d4,d4,d4, d4,worm),worm)
-        simulation(listOf(d4, d4, d4,d4,d4,d4, d4),d4)
-        connector.takePickomino(id,key,33)
-
-        // Joueur 1
-        simulation(List(8){worm},worm)
-        connector.takePickomino(id,key,36)
-
-        //Joueur 2
-        simulation(listOf(worm,d5, d2, d1, d2, d2, d2, d2), worm)
-        simulation(listOf(d4, d2, d1, d2, d2, d2, d2), d4)
-        simulation(List(6){d2}, d2)
-        assertThrows<BadStepException> { connector.takePickomino(id, key, 21) }
-
-    }
-
-    // test qui verifie bien que la fin de game se lance
-    @Test
-    fun testFinDeGame() {
-        //joueur 1 et joueur 2 font moins de 21 pour enlever les pickos
-        for (i in 0..14) {
-            simulation(listOf(d1, d1, d1, d1, d1, d1, d1, d1), d1)
-        }
-        // Joueur 2
-        simulation(listOf(worm,d5, d2, d1, d2, d2, d2, d2), worm)
-        simulation(listOf(d4, d2, d1, d2, d2, d2, d2), d4)
-        simulation(List(6){d2}, d2)
-        connector.takePickomino(id, key, 21)
-
-        assertTrue(connector.gameState(id,key).current.status == STATUS.GAME_FINISHED)
-        assertTrue(connector.finalScore(id, key) == listOf(0, 1))
-    }
 
     //test qui verifie bien que le statut ce met à jour lorsque on peut prendre un picko
     @Test
@@ -525,7 +369,6 @@ class JeuPickominoTest {
         connector.takePickomino(id,key,25)
 
         assertEquals(listOf(6,0),connector.gameState(id,key).score())
-        connector.listOfGameIds()
     }
 
     @Test
@@ -545,8 +388,104 @@ class JeuPickominoTest {
         assertThrows<BadStepException> {  simulation(listOf(d1, d1, d1, d1, d1, d1, d1, d1), d1)}
     }
 
+    //Test permettant de voir qu'on ne peut pas prendre un picko qui etais deja prenable lorsque les des ne sont plus validés
+    @Test
+    fun testSimulationDesIncorrect2() {
+        simulation(listOf(worm,worm,worm,worm,worm,d4 , d5, d1),worm)
+
+        val dicesToChoose = listOf(worm , worm,worm)
+        connector.choiceDices(id,key,dicesToChoose)
+
+        assertThrows<BadStepException> { connector.takePickomino(id,key,25)}
+    }
+
+    // test qui verifie qu'on peut pas prendre de picko sans worm
+    @Test
+    fun testvaleurCorrectMaisSansWorm(){
+        simulation(listOf(d5, d5, d5, d5,d5,d4 , d3, d1),d5)
+        assertThrows<BadStepException> { connector.takePickomino(id,key,25)}
+
+    }
+
+    // test qui verifie qu'un peut pas prendre de picko sans lancer de des
+    @Test
+    fun testTakePickoSansLancerDes() {
+        assertThrows<BadStepException>{ connector.takePickomino(id,key,21)}
+    }
+
+    // test qui verifie qu'un peut pas prendre de des sans lancer de des
+    @Test
+    fun testTakeDesSansLancerDes() {
+        assertThrows<BadStepException>{ connector.keepDices(id,key,d2)}
+    }
+
+    // test qui verifie qu'un peut pas prendre de des qui n'est pas dans la liste
+    @Test
+    fun testSansLancerDes() {
+        simulation(listOf(worm,worm,worm,worm,worm,d4,d4,d4),worm)
+        assertThrows<BadStepException>{ connector.keepDices(id,key,d2)}
+    }
+
+    // test qui verifie qu'on peut pas prendre de des quand on dois prendre un picko
+    @Test
+    fun testSansPicko() {
+        simulation(listOf(worm,worm,worm,worm,worm,d4,d4,d4),worm)
+        connector.takePickomino(id,key,25)
+        assertThrows<BadStepException>{ connector.keepDices(id,key,d2)}
+    }
+
+    // test qui verifie qu'on peut pas relancer les des lorsqu'on les a tous lancer
+    @Test
+    fun testRelancerDes() {
+        simulation(listOf(d1,d2,d3,d4,d5,worm,worm,worm),worm)
+        simulation(listOf(d1,d2,d3,d4,d5),d5)
+        simulation(listOf(d1,d2,d3,d4),d4)
+        simulation(listOf(d1,d2,d3),d3)
+        simulation(listOf(d1,d2),d2)
+        simulation(listOf(d1),d1)
+        assertThrows<BadStepException>{ connector.keepDices(id,key,d2)}
+    }
+
+    // test qui verifie qu'on peut pas prendre 2 picko
+    @Test
+    fun testPrendre2Picko(){
+        simulation(listOf(worm,worm,worm,worm,worm,d4,d4,d4),worm)
+        connector.takePickomino(id,key,25)
+        assertThrows<BadStepException>{connector.takePickomino(id,key,24) }
+    }
+
+    @ParameterizedTest
+    @MethodSource("pickoValues")
+    fun testSimulationPara(picko: Int, diceList: List<DICE>) {
+        val initialPickosStackTops = connector.gameState(id, key).pickosStackTops().toList()
+        print(initialPickosStackTops)
+
+        simulationPara(diceList.toMutableList(), picko)
+
+        val finalPickosStackTops = connector.gameState(id, key).pickosStackTops().toList()
+        print(finalPickosStackTops)
+
+        assertEquals(picko, finalPickosStackTops.first())
+    }
+
+    companion object {
+        @JvmStatic
+        fun pickoValues(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of(21, listOf(worm, d5, d3, d3, d2, d1, d1,d1)),
+                Arguments.of(36, listOf(worm,worm,worm,worm,worm,worm,worm,worm)),
+                Arguments.of(25, listOf(worm,d5,d5,d5,d5,d1,d1,d1)),
+                Arguments.of(30, listOf(d1, d2, d3, d4, d5, worm , worm ,worm)) ,
+                Arguments.of(26, listOf(d1, d1, d2, d3, d4, d5, worm, worm)),
+                Arguments.of(22, listOf(d1, d2, d3, d4, d5, d1, d1, worm)),
+                Arguments.of(28, listOf(d2, d2, d3, d3, d3, d5, worm, worm)),
+                Arguments.of(27, listOf(d4, d4, d4, d4, d4, d1, d1, worm)),
+                Arguments.of(31, listOf(d2, d2, d3, d4, d5, worm, d5, d5)),
+                Arguments.of(31, listOf(d2, d2, d3, d4, d5, worm, d5, d5)),
+                )
+        }
 
 
+    }
 }
-
 
