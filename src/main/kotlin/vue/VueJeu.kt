@@ -17,12 +17,19 @@ import javafx.stage.Stage
 
 class VueJeu : BorderPane() {
 
+    // CHILL MODE
+    /*
     private val listeMusiques = mutableListOf(
-        //createMediaPlayer("/sounds/musics/theme5.mp3").also{it.volume = 0.6}
         createMediaPlayer("/sounds/musics/theme1.mp3"),
         createMediaPlayer("/sounds/musics/theme2.mp3"),
         createMediaPlayer("/sounds/musics/theme3.mp3"),
         createMediaPlayer("/sounds/musics/theme4.mp3")
+    ).shuffled()*/
+
+    // EPIC MODE
+    private val listeMusiques = mutableListOf(
+        createMediaPlayer("/sounds/musics/theme1_epic.mp3").also{it.volume = 0.6},
+        createMediaPlayer("/sounds/musics/theme2_epic.mp3").also{it.volume = 0.1}
     ).shuffled()
 
     private val sonDes = createMediaPlayer("/sounds/effects/dice_rolling.mp3").also{it.volume = 0.5; it.setOnEndOfMedia{it.stop()}}
@@ -128,7 +135,6 @@ class VueJeu : BorderPane() {
         bottom = cadreJoueurs
 
         listeMusiques.forEachIndexed{index, mediaPlayer ->
-            mediaPlayer.volume = 0.5
             mediaPlayer.setOnEndOfMedia {
                 mediaPlayer.stop()
                 listeMusiques[(index + 1) % listeMusiques.size].play()
@@ -286,7 +292,7 @@ class VueJeu : BorderPane() {
     }
 
     private fun createMediaPlayer(musicPath: String): MediaPlayer {
-        return MediaPlayer(Media(javaClass.getResource(musicPath)?.toExternalForm()))
+        return MediaPlayer(Media(javaClass.getResource(musicPath)?.toExternalForm())).also{it.volume = 0.5}
     }
 
     fun jouerSonDes() {

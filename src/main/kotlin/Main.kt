@@ -28,7 +28,7 @@ import java.net.http.HttpTimeoutException
 class Main : Application() {
     private var vueMenu = VueMenu()
     private var vueJeu = VueJeu()
-    private val vueRegles = VueRegles()
+    private var vueRegles = VueRegles()
     private var modele = JeuPickomino()
 
     override fun start(stage: Stage) {
@@ -36,9 +36,10 @@ class Main : Application() {
         val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
         sceneMenu.stylesheets.add("stylesheets/styles.css")
         val sceneRegles = Scene(vueRegles)
+
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueMenu, stage)
-        vueMenu.boutonRegles.onAction = ControleurBoutonRegles(sceneMenu, sceneRegles, vueRegles, stage)
-        vueRegles.boutonRetour.onAction = ControleurBoutonRetour(sceneMenu, stage)
+        vueMenu.boutonRegles.onAction = ControleurBoutonRegles(vueMenu, sceneRegles, vueRegles, stage)
+        vueRegles.boutonRetour.onAction = ControleurBoutonRetour(vueMenu, sceneMenu, vueRegles, stage)
 
         activerModeDebug() // DEBUG
         stage.icons.add(Image("images/icon.png"))
@@ -55,8 +56,9 @@ class Main : Application() {
 
     fun relancerMenu(stage: Stage) {
         vueMenu = VueMenu()
+        vueRegles = VueRegles()
         resetPartie()
-        vueMenu.redemarrerMusique()
+        vueMenu.jouerMusique()
         start(stage)
     }
 
@@ -103,7 +105,7 @@ class Main : Application() {
         alert.contentText = "Échec de connexion au serveur, vérifier la connexion."
         alert.title = "Erreur de connexion"
         vueMenu.opacity = 1.0
-        vueMenu.reprendreMusique()
+        vueMenu.jouerMusique()
         vueMenu.activerToutLesBoutons()
         alert.show()
     }

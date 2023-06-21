@@ -4,6 +4,8 @@ import controleur.menu.ControleurBoutonMoins
 import controleur.menu.ControleurBoutonPlus
 import javafx.animation.FadeTransition
 import javafx.geometry.Insets
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
 import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.Label
@@ -21,6 +23,9 @@ class VueMenu : BorderPane() {
     val boutonMoins = Button("-").also{it.styleClass.addAll("bouton","bouton-moins")}
     val boutonPlus = Button("+").also{it.styleClass.addAll("bouton","bouton-plus")}
     val boutonJouer = Button("Jouer").also{it.styleClass.addAll("bouton","bouton-jouer")}
+
+    private val sonJouer = MediaPlayer(Media(javaClass.getResource("/sounds/effects/start_game.mp3")?.toExternalForm())).also{it.volume = 0.7}
+    private val musiqueMenu = MediaPlayer(Media(javaClass.getResource("/sounds/musics/main_menu_theme.mp3")?.toExternalForm()))
 
     val fadeTransition = FadeTransition(Duration.seconds(1.5), this)
 
@@ -65,6 +70,10 @@ class VueMenu : BorderPane() {
             it.styleClass.add("handrawn")
             it.style = "-fx-font-size: 40px;"}).also{it.alignment = Pos.CENTER}
         ).also{it.spacing = 15.0; setMargin(it, Insets(10.0, 0.0, 0.0, 10.0))}
+
+        musiqueMenu.volume = 0.5
+        musiqueMenu.cycleCount = MediaPlayer.INDEFINITE
+        musiqueMenu.play()
     }
 
     fun getNbJoueurs() : Int {
@@ -72,9 +81,20 @@ class VueMenu : BorderPane() {
     }
 
     fun transitionJouer() {
+        musiqueMenu.stop()
+        sonJouer.setOnEndOfMedia{sonJouer.stop()}
+        sonJouer.play()
         fadeTransition.fromValue = 1.0  // Opacité de départ (100% opaque)
         fadeTransition.toValue = 0.0    // Opacité finale (0% opaque)
         fadeTransition.play()
+    }
+
+    fun arreterMusique() {
+        musiqueMenu.stop()
+    }
+
+    fun jouerMusique() {
+        musiqueMenu.play()
     }
 
     fun desactiverToutLesBoutons() {

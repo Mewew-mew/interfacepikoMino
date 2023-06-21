@@ -9,6 +9,8 @@ import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
@@ -20,6 +22,8 @@ class VueRegles : TitledPane() {
     val boutonPrecedent = Button("<")
     val boutonSuivant = Button(">")
     val boutonRetour = ReturnButton()
+
+    val musiqueRegle = MediaPlayer(Media(javaClass.getResource("/sounds/musics/rules_theme.mp3")?.toExternalForm()))
 
     init {
         boutonPrecedent.setOnAction{
@@ -95,5 +99,13 @@ class VueRegles : TitledPane() {
         text = "1 -"
         cadreRegle.center = listeRegles[0]
         boutonPrecedent.isDisable = true
+    }
+
+    fun jouerMusique() {
+        musiqueRegle.play()
+    }
+
+    fun arreterMusique() {
+        musiqueRegle.stop()
     }
 }
