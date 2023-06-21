@@ -15,7 +15,7 @@ import javafx.util.Duration
 
 class VueMenu : BorderPane() {
 
-    val cadreCentre = VBox()
+    private val cadreCentre = VBox()
     val labelNbrJoueur = Label("Joueurs : 2")
     val boutonRegles = RulesButton()
     val boutonMoins = Button("-").also{it.styleClass.addAll("bouton","bouton-moins")}
