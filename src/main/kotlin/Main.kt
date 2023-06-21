@@ -3,8 +3,9 @@ import controleur.jeu.ControleurBoutonJoueurSuivant
 import controleur.jeu.ControleurBoutonLancer
 import controleur.jeu.ControleurBoutonValider
 import controleur.menu.ControleurBoutonJouer
+import controleur.menu.ControleurBoutonRetour
+import controleur.menu.ControleurBoutonRegles
 import io.ktor.client.network.sockets.*
-import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.DICE.*
 import iut.info1.pickomino.data.STATUS
@@ -22,18 +23,23 @@ import modele.JeuPickomino
 import vue.DiceButton
 import vue.VueJeu
 import vue.VueMenu
+import vue.VueRegles
 import java.net.http.HttpTimeoutException
 
 class Main : Application() {
     private var vueMenu = VueMenu()
     private var vueJeu = VueJeu()
+    private val vueRegles = VueRegles()
     private var modele = JeuPickomino()
 
     override fun start(stage: Stage) {
         stage.close()
         val sceneMenu = Scene(StackPane(Rectangle(670.0, 670.0, Color.web("#FAEBD7")), vueMenu))
         sceneMenu.stylesheets.add("stylesheets/styles.css")
+        val sceneRegles = Scene(vueRegles)
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueMenu, stage)
+        vueMenu.boutonRegles.onAction = ControleurBoutonRegles(sceneMenu, sceneRegles, vueRegles, stage)
+        vueRegles.boutonRetour.onAction = ControleurBoutonRetour(sceneMenu, stage)
 
         activerModeDebug() // DEBUG
         stage.icons.add(Image("images/icon.png"))
@@ -44,7 +50,7 @@ class Main : Application() {
         stage.height = 670.0
         stage.isResizable = false
         stage.scene = sceneMenu
-        stage.title = "Pickomino"
+        stage.title = "Menu - Pickomino"
         stage.show()
     }
 
@@ -82,7 +88,7 @@ class Main : Application() {
             stage.minHeight = 940.0
             stage.width = 1600.0
             stage.height = 940.0
-
+            stage.title = "Jeu - Pickomino"
             stage.show()
         } catch (e: HttpTimeoutException) {
             afficherAlert()
@@ -179,6 +185,5 @@ class Main : Application() {
     }
 }
 fun main() {
-    val connector = Connector.factory("172.26.82.76", "8080", true)
     Application.launch(Main::class.java)
 }

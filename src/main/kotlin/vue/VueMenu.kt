@@ -13,8 +13,11 @@ import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.util.Duration
 
-class VueMenu : VBox() {
+class VueMenu : BorderPane() {
+
+    private val cadreCentre = VBox()
     val labelNbrJoueur = Label("Joueurs : 2")
+    val boutonRegles = RulesButton()
     val boutonMoins = Button("-").also{it.styleClass.addAll("bouton","bouton-moins")}
     val boutonPlus = Button("+").also{it.styleClass.addAll("bouton","bouton-plus")}
     val boutonJouer = Button("Jouer").also{it.styleClass.addAll("bouton","bouton-jouer")}
@@ -52,9 +55,16 @@ class VueMenu : VBox() {
         cadreJouer.spacing = 15.0
         cadreJouer.alignment = Pos.CENTER
 
-        alignment = Pos.TOP_CENTER
-        setMargin(labelTitre, Insets(115.0, 0.0, 120.0, 0.0))
-        children.addAll(labelTitre, cadreJouer)
+        cadreCentre.alignment = Pos.TOP_CENTER
+        cadreCentre.spacing = 130.0
+        setMargin(cadreCentre, Insets(25.0, 0.0, 120.0, 0.0))
+        cadreCentre.children.addAll(labelTitre, cadreJouer)
+        center = cadreCentre
+
+        top = HBox(boutonRegles, VBox(Label("Règles").also{
+            it.styleClass.add("handrawn")
+            it.style = "-fx-font-size: 40px;"}).also{it.alignment = Pos.CENTER}
+        ).also{it.spacing = 15.0; setMargin(it, Insets(10.0, 0.0, 0.0, 10.0))}
     }
 
     fun getNbJoueurs() : Int {
@@ -66,7 +76,6 @@ class VueMenu : VBox() {
         fadeTransition.toValue = 0.0    // Opacité finale (0% opaque)
         fadeTransition.play()
     }
-
 
     fun desactiverToutLesBoutons() {
         when {
