@@ -10,20 +10,19 @@ import javafx.scene.control.Label
 import javafx.scene.effect.DropShadow
 import javafx.scene.image.Image
 import javafx.scene.layout.*
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
 import javafx.scene.paint.Color
 import javafx.util.Duration
 
-class VueMenu : VBox() {
+class VueMenu : BorderPane() {
+
+    val cadreCentre = VBox()
     val labelNbrJoueur = Label("Joueurs : 2")
+    val boutonRegles = RulesButton()
     val boutonMoins = Button("-").also{it.styleClass.addAll("bouton","bouton-moins")}
     val boutonPlus = Button("+").also{it.styleClass.addAll("bouton","bouton-plus")}
     val boutonJouer = Button("Jouer").also{it.styleClass.addAll("bouton","bouton-jouer")}
 
-    private val sonJouer = MediaPlayer(Media(javaClass.getResource("/sounds/effects/start_game.mp3")?.toExternalForm()))
     val fadeTransition = FadeTransition(Duration.seconds(1.5), this)
-    private val musiqueMenu = MediaPlayer(Media(javaClass.getResource("/sounds/musics/main_menu_theme.mp3")?.toExternalForm()))
 
     init {
         background = Background(BackgroundImage(
@@ -56,13 +55,16 @@ class VueMenu : VBox() {
         cadreJouer.spacing = 15.0
         cadreJouer.alignment = Pos.CENTER
 
-        alignment = Pos.TOP_CENTER
-        setMargin(labelTitre, Insets(115.0, 0.0, 120.0, 0.0))
-        children.addAll(labelTitre, cadreJouer)
+        cadreCentre.alignment = Pos.TOP_CENTER
+        cadreCentre.spacing = 130.0
+        setMargin(cadreCentre, Insets(25.0, 0.0, 120.0, 0.0))
+        cadreCentre.children.addAll(labelTitre, cadreJouer)
+        center = cadreCentre
 
-        musiqueMenu.volume = 0.5
-        musiqueMenu.cycleCount = MediaPlayer.INDEFINITE
-        musiqueMenu.play()
+        top = HBox(boutonRegles, VBox(Label("Règles").also{
+            it.styleClass.add("handrawn")
+            it.style = "-fx-font-size: 40px;"}).also{it.alignment = Pos.CENTER}
+        ).also{it.spacing = 15.0; setMargin(it, Insets(10.0, 0.0, 0.0, 10.0))}
     }
 
     fun getNbJoueurs() : Int {
@@ -70,21 +72,9 @@ class VueMenu : VBox() {
     }
 
     fun transitionJouer() {
-        musiqueMenu.stop()
-        sonJouer.setOnEndOfMedia{sonJouer.stop()}
-        sonJouer.play()
         fadeTransition.fromValue = 1.0  // Opacité de départ (100% opaque)
         fadeTransition.toValue = 0.0    // Opacité finale (0% opaque)
         fadeTransition.play()
-    }
-
-    fun reprendreMusique() {
-        musiqueMenu.play()
-    }
-
-    fun redemarrerMusique() {
-        musiqueMenu.stop()
-        musiqueMenu.play()
     }
 
     fun desactiverToutLesBoutons() {
