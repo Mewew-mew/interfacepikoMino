@@ -247,6 +247,7 @@ class VueJeu : BorderPane() {
             stage.width = 1600.0
             stage.height = 900.0
             stage.scene = sceneFin
+            stage.title = "Résultats - Pickomino"
             stage.show()
         }
     }
