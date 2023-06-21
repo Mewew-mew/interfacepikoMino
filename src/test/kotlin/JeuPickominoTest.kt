@@ -458,13 +458,10 @@ class JeuPickominoTest {
     @MethodSource("pickoValues")
     fun testSimulationPara(picko: Int, diceList: List<DICE>) {
         val initialPickosStackTops = connector.gameState(id, key).pickosStackTops().toList()
-        print(initialPickosStackTops)
 
         simulationPara(diceList.toMutableList(), picko)
 
         val finalPickosStackTops = connector.gameState(id, key).pickosStackTops().toList()
-        print(finalPickosStackTops)
-
         assertEquals(picko, finalPickosStackTops.first())
     }
 

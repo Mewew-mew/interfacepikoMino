@@ -29,7 +29,7 @@ import java.net.http.HttpTimeoutException
 class Main : Application() {
     private var vueMenu = VueMenu()
     private var vueJeu = VueJeu()
-    private val vueRegles = VueRegles()
+    private var vueRegles = VueRegles()
     private var modele = JeuPickomino()
 
     override fun start(stage: Stage) {
@@ -56,6 +56,7 @@ class Main : Application() {
 
     fun relancerMenu(stage: Stage) {
         vueMenu = VueMenu()
+        vueRegles = VueRegles()
         resetPartie()
         start(stage)
     }
