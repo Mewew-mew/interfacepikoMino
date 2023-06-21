@@ -50,7 +50,7 @@ class VueFin(private val nbJoueurs : Int) : BorderPane() {
                 it.style = "-fx-fill: ${listeCouleursPodium[placement]}; -fx-stroke: black; -fx-stroke-width: 5px;"
             }
             if (index != 3) {
-                val img = ImageView(Image("images/${placement+1}.png", rectangle.width-20, rectangle.height-20, true, false))
+                val img = ImageView(Image("images/medailles/${placement+1}.png", rectangle.width-20, rectangle.height-20, true, false))
                 listeRectanglePodium.add(StackPane(rectangle, img))
             } else listeRectanglePodium.add(StackPane(rectangle))
 
