@@ -31,22 +31,18 @@ class ControleurBoutonValider(
 
             // On update nbr pickomino car garderDes met à jour les nombres
             vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
-
             // Actualisation des listes des dés lances et gardes
             vueJeu.listeDesGardes.clear()
             for (desGardes in listeGarde)
                 vueJeu.listeDesGardes.add(DiceButton(desGardes).also{it.isDisable = true; it.border = null})
-
             vueJeu.updateAffichageDes()
             vueJeu.boutonValider.isDisable = true
             vueJeu.clearDesLances()
 
             val ilYaUnVers = vueJeu.listeDesGardes.any{it.type == DICE.worm}
-            val sommeDesGardes = modele.sommeDes(vueJeu.listeDesGardes.map{it.type})
+            val sommeDesGardes = modele.sommeDes(modele.listeDesGardes())
 
-            vueJeu.updatePickominos(modele.listePickominoAccessible())
-            vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
-            vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+            updateJeu()
 
             // Cas ou il y a 8 dés gardés et qu'aucun Pickomino n'a été activé ou alors qu'il n'y a pas de vers
             if (vueJeu.listeDesGardes.size == 8) {
@@ -74,9 +70,7 @@ class ControleurBoutonValider(
             val valuePickominoSelectionne = vueJeu.valuePickominoSelectionne()
             modele.prendrePickomino(valuePickominoSelectionne)
             vueJeu.listeBoutonPickoAccess.removeIf{it.value == valuePickominoSelectionne}
-            vueJeu.updatePickominos(modele.listePickominoAccessible())
-            vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
-            vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+            updateJeu()
             vueJeu.boutonValider.isDisable = true
             vueJeu.boutonLancer.isDisable = false
             vueJeu.clearDesGardes()
@@ -85,5 +79,11 @@ class ControleurBoutonValider(
             if (vueJeu.listeBoutonPickoAccess.isEmpty())
                 vueJeu.declencherFinPartie(appli, stage, modele.obtenirScoreFinal(), modele.donnePickoMaxJoueurs())
         }
+    }
+
+    private fun updateJeu() {
+        vueJeu.updatePickominos(modele.listePickominoAccessible())
+        vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+        vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
     }
 }

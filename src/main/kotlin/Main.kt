@@ -6,6 +6,7 @@ import controleur.menu.ControleurBoutonJouer
 import io.ktor.client.network.sockets.*
 import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
+import iut.info1.pickomino.data.DICE.*
 import iut.info1.pickomino.data.STATUS
 import javafx.application.Application
 import javafx.beans.binding.Bindings
@@ -109,10 +110,47 @@ class Main : Application() {
     fun activerModeDebug() {
         if (modele.debug) // DEBUG
             vueJeu.setOnKeyPressed {
+                if (it.code == NUMPAD7) {
+                    modele.choisirDes(listOf(worm, worm, worm, worm, d1, d2, d2, d2))
+                    modele.garderDes(worm)
+                    modele.choisirDes(listOf(d1, d2, d2, d2))
+                    modele.garderDes(d1)
+                    modele.prendrePickomino(21)
+
+                    modele.choisirDes(listOf(worm, worm, worm, worm, d2, d1, d1, d1))
+                    modele.garderDes(worm)
+                    modele.choisirDes(listOf(d2, d1, d1, d1))
+                    modele.garderDes(d2)
+                    modele.prendrePickomino(22)
+
+                    modele.choisirDes(listOf(worm, worm, worm, worm, d3, d1, d1, d1))
+                    modele.garderDes(worm)
+                    modele.choisirDes(listOf(d3, d1, d1, d1))
+                    modele.garderDes(d3)
+                    modele.prendrePickomino(23)
+
+                    modele.choisirDes(listOf(d1, d1, d1, d2, d2, d2, d2, d2))
+                    modele.garderDes(d1)
+                    modele.choisirDes(listOf(d2, d3, d3, d3, d3))
+                    modele.garderDes(d2)
+                    modele.choisirDes(listOf(d3, d4, d4, d4))
+                    modele.garderDes(d3)
+                    modele.choisirDes(listOf(d4, d5, d5))
+                    modele.garderDes(d4)
+                    modele.choisirDes(listOf(d5, worm))
+                    modele.garderDes(d5)
+
+                    vueJeu.updatePickominos(modele.listePickominoAccessible())
+                    vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+                    vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
+                    vueJeu.updateCadreInformation(1)
+                }
+
+
                 if (it.code == NUMPAD0 && modele.donneStatus() != STATUS.KEEP_DICE) {
                     for (i in 0 until vueJeu.listeBoutonPickoAccess.size-1) {
-                        modele.choisirDes(listOf(DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1, DICE.d1))
-                        modele.garderDes(DICE.d1)
+                        modele.choisirDes(listOf(d1, d1, d1, d1, d1, d1, d1, d1))
+                        modele.garderDes(d1)
                     }
                     vueJeu.updatePickominos(modele.listePickominoAccessible())
                     vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
@@ -124,12 +162,12 @@ class Main : Application() {
                         vueJeu.listeBoutonPickoAccess.forEach{picko -> picko.isDisable = true; picko.isSelected = false}
                         vueJeu.listeBoutonPickoSommetPile.forEach{picko -> picko.isDisable = true}
                         when (it.code) {
-                            NUMPAD1 -> vueJeu.listeDesLances.add(DiceButton(DICE.d1, modele.listeDesGardes().contains(DICE.d1)))
-                            NUMPAD2 -> vueJeu.listeDesLances.add(DiceButton(DICE.d2, modele.listeDesGardes().contains(DICE.d2)))
-                            NUMPAD3 -> vueJeu.listeDesLances.add(DiceButton(DICE.d3, modele.listeDesGardes().contains(DICE.d3)))
-                            NUMPAD4 -> vueJeu.listeDesLances.add(DiceButton(DICE.d4, modele.listeDesGardes().contains(DICE.d4)))
-                            NUMPAD5 -> vueJeu.listeDesLances.add(DiceButton(DICE.d5, modele.listeDesGardes().contains(DICE.d5)))
-                            NUMPAD6 -> vueJeu.listeDesLances.add(DiceButton(DICE.worm, modele.listeDesGardes().contains(DICE.worm)))
+                            NUMPAD1 -> vueJeu.listeDesLances.add(DiceButton(d1, modele.listeDesGardes().contains(d1)))
+                            NUMPAD2 -> vueJeu.listeDesLances.add(DiceButton(d2, modele.listeDesGardes().contains(d2)))
+                            NUMPAD3 -> vueJeu.listeDesLances.add(DiceButton(d3, modele.listeDesGardes().contains(d3)))
+                            NUMPAD4 -> vueJeu.listeDesLances.add(DiceButton(d4, modele.listeDesGardes().contains(d4)))
+                            NUMPAD5 -> vueJeu.listeDesLances.add(DiceButton(d5, modele.listeDesGardes().contains(d5)))
+                            NUMPAD6 -> vueJeu.listeDesLances.add(DiceButton(worm, modele.listeDesGardes().contains(worm)))
                             else -> {}
                         }
                     }
