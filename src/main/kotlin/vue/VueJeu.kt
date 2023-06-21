@@ -197,7 +197,6 @@ class VueJeu : BorderPane() {
         var pickominoActive = false
         val pickominoAccess = listeBoutonPickoAccess.lastOrNull{it.value <= value}
         if (pickominoAccess != null) { // bug
-            println(pickominoAccess.value)
             pickominoActive = true
             pickominoAccess.isDisable = false
             pickominoAccess.style = ""
