@@ -1,5 +1,6 @@
 package controleur.menu
 
+import Main
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.Scene
@@ -9,6 +10,7 @@ import vue.VueMenu
 import vue.VueRegles
 
 class ControleurBoutonRetour(
+    private val appli: Main,
     private val vueMenu: VueMenu,
     private val sceneMenu: Scene,
     private val vueRegles: VueRegles,
@@ -20,14 +22,6 @@ class ControleurBoutonRetour(
 
         stage.close()
         stage.icons[0] = Image("images/icon.png")
-        stage.isMaximized = false
-        stage.minWidth = 670.0
-        stage.minHeight = 670.0
-        stage.width = 670.0
-        stage.height = 670.0
-        stage.isResizable = false
-        stage.scene = sceneMenu
-        stage.title = "Menu - Pickomino"
-        stage.show()
+        appli.lancerMenu(sceneMenu, stage)
     }
 }

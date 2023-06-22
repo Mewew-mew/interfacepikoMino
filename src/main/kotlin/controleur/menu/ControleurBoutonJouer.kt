@@ -13,7 +13,7 @@ class ControleurBoutonJouer(
 ) : EventHandler<ActionEvent> {
     override fun handle(event: ActionEvent) {
         vueMenu.desactiverToutLesBoutons()
-        vueMenu.fadeTransition.setOnFinished{appli.lancerPartie(vueMenu.getNbJoueurs(), stage)}
+        vueMenu.fadeTransition.setOnFinished{appli.lancerJeu(vueMenu.getNbJoueurs(), stage)}
         vueMenu.transitionJouer()
     }
 }
