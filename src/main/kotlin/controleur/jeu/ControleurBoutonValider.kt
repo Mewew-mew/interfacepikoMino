@@ -41,29 +41,20 @@ class ControleurBoutonValider(
 
             val ilYaUnVers = vueJeu.listeDesGardes.any{it.type == DICE.worm}
             val sommeDesGardes = modele.sommeDes(modele.listeDesGardes())
-
             updateJeu()
 
-            // Cas ou il y a 8 dés gardés et qu'aucun Pickomino n'a été activé ou alors qu'il n'y a pas de vers
-            if (vueJeu.listeDesGardes.size == 8) {
-                vueJeu.boutonLancer.isDisable = true // On désactive à coup sur le boutonLancer
-                if (!ilYaUnVers || !vueJeu.activerPickomino(sommeDesGardes, joueurActuel)) {
-                    // Si il ne reste plus de Pickomino
-                    if (vueJeu.listeBoutonPickoAccess.isEmpty())
-                        vueJeu.declencherFinPartie(appli, stage, modele.obtenirScoreFinal(), modele.donnePickoMaxJoueurs())
-                    else {
-                        vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
-                        vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
-                    }
-                } else
-                    vueJeu.labelInformation.text = "Vous pouvez prendre un Pickomino !"
-            } else {
-                vueJeu.boutonLancer.isDisable = false
-                if (ilYaUnVers && vueJeu.activerPickomino(sommeDesGardes, joueurActuel))
-                    vueJeu.labelInformation.text = "Vous pouvez lancer les dés ou prendre un Pickomino !"
+            val huitDes = vueJeu.listeDesGardes.size == 8
+            vueJeu.boutonLancer.isDisable = huitDes
+
+            if (ilYaUnVers && vueJeu.activerPickomino(sommeDesGardes, joueurActuel))
+                vueJeu.labelInformation.text = if (huitDes) "Vous pouvez prendre un Pickomino !" else "Vous pouvez lancer les dés ou prendre un Pickomino !"
+            else if (huitDes)
+                if (vueJeu.listeBoutonPickoAccess.isEmpty())
+                    vueJeu.declencherFinPartie(appli, stage, modele.obtenirScoreFinal(), modele.donnePickoMaxJoueurs())
                 else
-                    vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
-            }
+                    perdu()
+            else
+                vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
 
         } else { // Sinon un pickomino est séléctionné
             vueJeu.labelInformation.text = "Vous pouvez lancer les dés !"
@@ -85,5 +76,10 @@ class ControleurBoutonValider(
         vueJeu.updatePickominos(modele.listePickominoAccessible())
         vueJeu.updateStackTops(modele.sommetsPilesPickominoJoueurs())
         vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
+    }
+
+    private fun perdu() {
+        vueJeu.cadreBoutons.children.add(vueJeu.boutonJoueurSuivant)
+        vueJeu.labelInformation.text = "C'est perdu... Vous pouvez passer au joueur suivant !"
     }
 }
