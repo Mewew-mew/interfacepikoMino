@@ -23,6 +23,7 @@ import vue.DiceButton
 import vue.VueJeu
 import vue.VueMenu
 import vue.VueRegles
+import java.net.NoRouteToHostException
 import java.net.http.HttpTimeoutException
 
 class Main : Application() {
@@ -97,6 +98,8 @@ class Main : Application() {
         } catch (e: HttpTimeoutException) {
             afficherAlert()
         } catch (e: ConnectTimeoutException) {
+            afficherAlert()
+        } catch (e: NoRouteToHostException) {
             afficherAlert()
         }
     }
