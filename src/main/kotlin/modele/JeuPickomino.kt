@@ -3,23 +3,16 @@ package modele
 import iut.info1.pickomino.Connector
 import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.Game
-import iut.info1.pickomino.data.STATUS
 
 class JeuPickomino {
-    @Deprecated("DEBUG") val debug = true
     private lateinit var connect : Connector
     private lateinit var etatJeu : Game
     private var id = 0
     private var key = 0
     private lateinit var listeJoueurs : Array<Joueur>
 
-    @Deprecated("DEBUG")
-    fun donneStatus() : STATUS { // DEBUG
-        return etatJeu.current.status
-    }
-
     fun init(nbJoueurs : Int) {
-        connect = Connector.factory("172.26.82.76", "8080", debug)
+        connect = Connector.factory("172.26.82.76", "8080")
         val identification = connect.newGame(nbJoueurs)
         id = identification.first
         key = identification.second
@@ -35,20 +28,6 @@ class JeuPickomino {
         val listeDesGardesAfter = listeDesGardes()
         // On regarde si premièrement on est pas au début d'un tour
         // Puis si la liste des gardes après avoir lancé ne s'est pas vidé
-        if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
-            listeJoueurs[joueurActuel].retirerPickomino()
-            listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])
-        }
-        return listeDesLances
-    }
-
-    @Deprecated("DEBUG")
-    fun choisirDes(listDices : List<DICE>): List<DICE> {
-        val joueurActuel = joueurActuel()
-        val listeDesGardesBefore = listeDesGardes()
-        val listeDesLances = connect.choiceDices(id, key, listDices)
-        etatJeu = connect.gameState(id, key)
-        val listeDesGardesAfter = listeDesGardes()
         if (listeDesGardesBefore.isNotEmpty() && listeDesGardesAfter.isEmpty()) {
             listeJoueurs[joueurActuel].retirerPickomino()
             listeJoueurs[joueurActuel].updateStackTop(sommetsPilesPickominoJoueurs()[joueurActuel])

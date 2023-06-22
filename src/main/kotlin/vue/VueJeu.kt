@@ -277,7 +277,7 @@ class VueJeu : BorderPane() {
         boutonResultats.setOnAction {
             val vueFin = VueFin(listeBoutonPickoSommetPile.size)
             vueFin.boutonMenu.setOnAction{appli.relancerMenu(stage)}
-            vueFin.boutonRejouer.setOnAction{appli.resetPartie(); appli.lancerJeu(listeJoueurs.size, stage); appli.activerModeDebug()}
+            vueFin.boutonRejouer.setOnAction{appli.resetPartie(); appli.lancerJeu(listeJoueurs.size, stage)}
             vueFin.init(scoreFinaux, listePickoMax)
             val sceneFin = Scene(vueFin)
             sceneFin.stylesheets.add("stylesheets/styles.css")

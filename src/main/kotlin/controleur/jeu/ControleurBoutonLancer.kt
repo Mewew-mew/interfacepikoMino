@@ -1,7 +1,6 @@
 package controleur.jeu
 
 import Main
-import iut.info1.pickomino.data.DICE
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.stage.Stage
@@ -24,8 +23,7 @@ class ControleurBoutonLancer(
             pickomino.isSelected = false
         }
 
-        //val listeDesLances = modele.lancerDes()
-        val listeDesLances = choisirDes()
+        val listeDesLances = modele.lancerDes()
 
         vueJeu.updateDesLances(listeDesLances)
         vueJeu.boutonLancer.isDisable = true
@@ -44,13 +42,5 @@ class ControleurBoutonLancer(
             }
         } else vueJeu.labelInformation.text = "Vous pouvez choisir un type de dé à garder !"
         vueJeu.updateNombrePickomino(modele.donneNombrePickominoJoueurs())
-    }
-
-    @Deprecated("DEBUG")
-    fun choisirDes(): List<DICE> {
-        val debug = vueJeu.listeDesLances.map{it.type}
-        return if (debug.isNotEmpty())
-            modele.choisirDes(debug)
-        else modele.lancerDes()
     }
 }

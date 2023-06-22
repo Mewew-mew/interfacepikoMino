@@ -1,14 +1,12 @@
 package vue
 
 import javafx.geometry.Insets
-import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.TitledPane
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
@@ -18,10 +16,10 @@ import javafx.scene.shape.Rectangle
 class VueRegles : TitledPane() {
 
     private val listeRegles = List(8){i -> ImageView(Image("images/rules/${i + 1}.png", 440.0, 440.0, true, false))}
-    var reglesActuel = 0
+    private var reglesActuel = 0
     private val cadreRegle = BorderPane()
-    val boutonPrecedent = Button("<")
-    val boutonSuivant = Button(">")
+    private val boutonPrecedent = Button("<")
+    private val boutonSuivant = Button(">")
     val boutonRetour = ReturnButton()
 
     val musiqueRegle = MediaPlayer(Media(javaClass.getResource("/sounds/musics/rules_theme.mp3")?.toExternalForm()))
