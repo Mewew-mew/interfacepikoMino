@@ -167,10 +167,6 @@ class VueJeu : BorderPane() {
 
         for (i in listeBoutonPickoSommetPile.indices) {
             if (i != joueur && listeBoutonPickoSommetPile[i].value == value) {
-                println(i)
-                println(joueur)
-                println(listeBoutonPickoSommetPile[i].value)
-                println(value)
                 pickominoActive = true
                 listeBoutonPickoSommetPile[i].isDisable = false
                 listeBoutonPickoSommetPile[i].style = ""
@@ -243,7 +239,7 @@ class VueJeu : BorderPane() {
         boutonResultats.setOnAction {
             val vueFin = VueFin(listeBoutonPickoSommetPile.size)
             vueFin.boutonMenu.setOnAction{appli.relancerMenu(stage)}
-            vueFin.boutonRejouer.setOnAction{appli.resetPartie(); appli.lancerPartie(listeJoueurs.size, stage); appli.activerModeDebug()}
+            vueFin.boutonRejouer.setOnAction{appli.resetPartie(); appli.lancerJeu(listeJoueurs.size, stage); appli.activerModeDebug()}
             vueFin.init(scoreFinaux, listePickoMax)
             val sceneFin = Scene(vueFin)
             sceneFin.stylesheets.add("stylesheets/styles.css")

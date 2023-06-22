@@ -6,7 +6,6 @@ import controleur.menu.ControleurBoutonJouer
 import controleur.menu.ControleurBoutonRetour
 import controleur.menu.ControleurBoutonRegles
 import io.ktor.client.network.sockets.*
-import iut.info1.pickomino.data.DICE
 import iut.info1.pickomino.data.DICE.*
 import iut.info1.pickomino.data.STATUS
 import javafx.application.Application
@@ -39,10 +38,21 @@ class Main : Application() {
         val sceneRegles = Scene(vueRegles)
         vueMenu.boutonJouer.onAction = ControleurBoutonJouer(this, vueMenu, stage)
         vueMenu.boutonRegles.onAction = ControleurBoutonRegles(sceneMenu, sceneRegles, vueRegles, stage)
-        vueRegles.boutonRetour.onAction = ControleurBoutonRetour(sceneMenu, stage)
+        vueRegles.boutonRetour.onAction = ControleurBoutonRetour(this, sceneMenu, stage)
 
         activerModeDebug() // DEBUG
         stage.icons.add(Image("images/icon.png"))
+        lancerMenu(sceneMenu, stage)
+    }
+
+    fun relancerMenu(stage: Stage) {
+        vueMenu = VueMenu()
+        vueRegles = VueRegles()
+        resetPartie()
+        start(stage)
+    }
+
+    fun lancerMenu(sceneMenu : Scene, stage: Stage) {
         stage.isMaximized = false
         stage.minWidth = 670.0
         stage.minHeight = 670.0
@@ -54,14 +64,7 @@ class Main : Application() {
         stage.show()
     }
 
-    fun relancerMenu(stage: Stage) {
-        vueMenu = VueMenu()
-        vueRegles = VueRegles()
-        resetPartie()
-        start(stage)
-    }
-
-    fun lancerPartie(nbJoueurs : Int, stage: Stage) {
+    fun lancerJeu(nbJoueurs : Int, stage: Stage) {
         try {
             modele.init(nbJoueurs)
             vueJeu.init(nbJoueurs)
