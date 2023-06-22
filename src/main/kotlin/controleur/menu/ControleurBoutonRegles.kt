@@ -8,7 +8,6 @@ import javafx.stage.Stage
 import vue.VueRegles
 
 class ControleurBoutonRegles(
-    private val sceneMenu: Scene,
     private val sceneRegles: Scene,
     private val vueRegles: VueRegles,
     private val stage: Stage
